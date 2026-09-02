@@ -911,11 +911,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="num-versiculo" aria-hidden="true">${v.versiculo}</span>
                     <span class="versiculo-texto">${textoFormatado}</span>
                     <div class="versiculo-acoes-hover">
-                        <button type="button" class="btn-versiculo-acao btn-copiar-versiculo-individual" title="Copiar este versículo">
-                            📋 Copiar
+                        <button type="button" class="btn-versiculo-acao btn-copiar-versiculo-individual" title="Copiar versículo ${v.versiculo}">
+                            <span class="btn-ico-v" aria-hidden="true">📋</span>
+                            <span class="btn-txt-acao-v">Copiar</span>
                         </button>
                         <button type="button" class="btn-versiculo-acao btn-anotar-diario" title="Anotar no Diário Bíblico">
-                            📝 Anotar
+                            <span class="btn-ico-v" aria-hidden="true">📝</span>
+                            <span class="btn-txt-acao-v">Anotar</span>
                         </button>
                     </div>
                 `;

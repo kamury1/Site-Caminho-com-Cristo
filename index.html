@@ -298,41 +298,56 @@
                 <div class="leitor-barra-controle">
                     
                     <div class="leitor-filtros-topo">
-                        <!-- FILTRO TESTAMENTO -->
+                        <!-- FILTRO TESTAMENTO RESPONSIVO -->
                         <div class="botoes-testamento" role="tablist" aria-label="Filtrar por Testamento">
-                            <button type="button" class="btn-tab-testamento ativo" data-testamento="todos" role="tab" aria-selected="true">Todos (73)</button>
-                            <button type="button" class="btn-tab-testamento" data-testamento="Antigo Testamento" role="tab" aria-selected="false">Antigo Testamento (46)</button>
-                            <button type="button" class="btn-tab-testamento" data-testamento="Novo Testamento" role="tab" aria-selected="false">Novo Testamento (27)</button>
+                            <button type="button" class="btn-tab-testamento ativo" data-testamento="todos" role="tab" aria-selected="true">
+                                <span class="tab-label-completa">Todos (73)</span>
+                                <span class="tab-label-compacta">Todos (73)</span>
+                            </button>
+                            <button type="button" class="btn-tab-testamento" data-testamento="Antigo Testamento" role="tab" aria-selected="false">
+                                <span class="tab-label-completa">Antigo Testamento (46)</span>
+                                <span class="tab-label-compacta">Antigo (46)</span>
+                            </button>
+                            <button type="button" class="btn-tab-testamento" data-testamento="Novo Testamento" role="tab" aria-selected="false">
+                                <span class="tab-label-completa">Novo Testamento (27)</span>
+                                <span class="tab-label-compacta">Novo (27)</span>
+                            </button>
                         </div>
 
                         <!-- FERRAMENTAS DE LEITURA (TEMA, TAMANHO DE FONTE, ÁUDIO, CÓPIA) -->
                         <div class="leitor-ferramentas-texto">
-                            <!-- SELETOR DE TEMA DE LEITURA -->
+                            <!-- SELETOR DE TEMA DE LEITURA (LINHA 1 NO MOBILE) -->
                             <div class="grupo-tema-leitura" role="group" aria-label="Tema de leitura da Bíblia">
                                 <button type="button" class="btn-tema-leitura ativo" data-tema="pergaminho" title="Modo Pergaminho Claro (Alta legibilidade)" aria-pressed="true">📜 Claro</button>
                                 <button type="button" class="btn-tema-leitura" data-tema="escuro" title="Modo Noturno (Alto contraste)" aria-pressed="false">🌙 Escuro</button>
                                 <button type="button" class="btn-tema-leitura" data-tema="sepia" title="Modo Sépia (Conforto visual)" aria-pressed="false">🏺 Sépia</button>
                             </div>
 
-                            <div class="grupo-ajuste-fonte" title="Ajustar tamanho da letra">
-                                <button type="button" class="btn-ferramenta-fonte" id="btnDiminuirFonte" aria-label="Diminuir tamanho da letra">A-</button>
-                                <span class="indicador-tamanho-fonte" id="indicadorTamanhoFonte">100%</span>
-                                <button type="button" class="btn-ferramenta-fonte" id="btnAumentarFonte" aria-label="Aumentar tamanho da letra">A+</button>
+                            <!-- FERRAMENTAS SECUNDÁRIAS (LINHA 2 NO MOBILE) -->
+                            <div class="leitor-ferramentas-secundarias">
+                                <div class="grupo-ajuste-fonte" title="Ajustar tamanho da letra">
+                                    <button type="button" class="btn-ferramenta-fonte" id="btnDiminuirFonte" aria-label="Diminuir tamanho da letra">A-</button>
+                                    <span class="indicador-tamanho-fonte" id="indicadorTamanhoFonte">100%</span>
+                                    <button type="button" class="btn-ferramenta-fonte" id="btnAumentarFonte" aria-label="Aumentar tamanho da letra">A+</button>
+                                </div>
+                                <button type="button" class="btn-icone-acao btn-ouvir-capitulo" id="btnOuvirCapitulo" title="Ouvir este capítulo em voz alta" aria-label="Ouvir capítulo bíblico">
+                                    <span class="icone-btn-leitor">🔊</span>
+                                    <span class="btn-texto-curto">Ouvir</span>
+                                </button>
+                                <button type="button" class="btn-icone-acao btn-copiar-capitulo" id="btnCopiarCapitulo" title="Copiar este capítulo" aria-label="Copiar capítulo bíblico">
+                                    <span class="icone-btn-leitor">📋</span>
+                                    <span class="btn-texto-curto">Copiar</span>
+                                </button>
                             </div>
-                            <button type="button" class="btn-icone-acao btn-ouvir-capitulo" id="btnOuvirCapitulo" title="Ouvir este capítulo em voz alta" aria-label="Ouvir capítulo bíblico">
-                                <span class="icone-btn-leitor">🔊</span>
-                                <span class="btn-texto-curto">Ouvir Capítulo</span>
-                            </button>
-                            <button type="button" class="btn-icone-acao btn-copiar-capitulo" id="btnCopiarCapitulo" title="Copiar este capítulo" aria-label="Copiar capítulo bíblico">
-                                <span class="icone-btn-leitor">📋</span>
-                                <span class="btn-texto-curto">Copiar</span>
-                            </button>
                         </div>
                     </div>
 
-                    <!-- ATALHOS RÁPIDOS DE LEITURAS FREQUENTES -->
+                    <!-- ATALHOS RÁPIDOS DE LEITURAS FREQUENTES (CARROSSEL NO MOBILE) -->
                     <div class="leitor-atalhos-pills">
-                        <span class="atalhos-biblia-label">Passagens frequentes:</span>
+                        <div class="atalhos-header-mobile">
+                            <span class="atalhos-biblia-label">Passagens frequentes:</span>
+                            <span class="dica-deslize-mobile" aria-hidden="true">Deslize ➔</span>
+                        </div>
                         <div class="pills-biblia-container">
                             <button type="button" class="pill-biblia-rapida" data-slug="salmos" data-cap="23">Salmo 23</button>
                             <button type="button" class="pill-biblia-rapida" data-slug="salmos" data-cap="91">Salmo 91</button>
@@ -348,28 +363,32 @@
                     <!-- SELETORES DROPDOWN DE LIVRO E CAPÍTULO -->
                     <div class="leitor-seletores-grid">
                         
-                        <div class="seletor-grupo">
-                            <label for="selectLivroBiblia">Livro Bíblico:</label>
-                            <div class="select-wrapper-custom">
-                                <select id="selectLivroBiblia" class="select-biblia" aria-label="Selecione o Livro Bíblico">
-                                    <option value="" disabled>Carregando livros...</option>
-                                </select>
+                        <div class="seletor-linha-livro-capitulo">
+                            <div class="seletor-grupo seletor-livro-grupo">
+                                <label for="selectLivroBiblia">Livro Bíblico:</label>
+                                <div class="select-wrapper-custom">
+                                    <select id="selectLivroBiblia" class="select-biblia" aria-label="Selecione o Livro Bíblico">
+                                        <option value="" disabled>Carregando livros...</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="seletor-grupo seletor-capitulo-grupo">
-                            <label for="selectCapituloBiblia">Capítulo:</label>
-                            <div class="select-wrapper-custom">
-                                <select id="selectCapituloBiblia" class="select-biblia select-capitulo" aria-label="Selecione o Capítulo">
-                                    <option value="1">1</option>
-                                </select>
+                            <div class="seletor-grupo seletor-capitulo-grupo">
+                                <label for="selectCapituloBiblia">Capítulo:</label>
+                                <div class="select-wrapper-custom">
+                                    <select id="selectCapituloBiblia" class="select-biblia select-capitulo" aria-label="Selecione o Capítulo">
+                                        <option value="1">1</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
                         <!-- BUSCA RÁPIDA DE LIVRO -->
                         <div class="seletor-grupo seletor-busca-livro">
                             <label for="inputBuscaLivro">Filtrar Livro:</label>
-                            <input type="text" id="inputBuscaLivro" class="input-busca-livro" placeholder="Digite para filtrar (ex: Sabedoria)..." autocomplete="off">
+                            <div class="input-busca-wrapper">
+                                <input type="text" id="inputBuscaLivro" class="input-busca-livro" placeholder="Digite para filtrar (ex: Sabedoria)..." autocomplete="off">
+                            </div>
                         </div>
 
                     </div>
@@ -400,13 +419,15 @@
 
                     <!-- NAVEGAÇÃO RÁPIDA INFERIOR -->
                     <div class="leitor-navegacao-capitulos">
-                        <button type="button" class="btn-nav-capitulo" id="btnCapituloAnterior" title="Capítulo Anterior">
-                            ← Anterior
-                        </button>
+                        <div class="leitor-nav-botoes-grid">
+                            <button type="button" class="btn-nav-capitulo btn-nav-ant" id="btnCapituloAnterior" title="Capítulo Anterior">
+                                ← Anterior
+                            </button>
+                            <button type="button" class="btn-nav-capitulo btn-nav-prox" id="btnCapituloProximo" title="Próximo Capítulo">
+                                Próximo →
+                            </button>
+                        </div>
                         <span class="leitor-indicador-centro" id="leitorIndicadorCentro">Capítulo 23 de 150</span>
-                        <button type="button" class="btn-nav-capitulo" id="btnCapituloProximo" title="Próximo Capítulo">
-                            Próximo →
-                        </button>
                     </div>
 
                 </div>
