@@ -241,6 +241,21 @@
                     <button type="button" class="btn-duracao" data-segundos="300">5 Minutos</button>
                 </div>
 
+                <!-- CONTROLE DISCRETO DE MÚSICA AMBIENTE -->
+                <div class="timer-audio-container" aria-label="Controle de música instrumental para oração">
+                    <button type="button" class="btn-audio-toggle" id="btnAudioToggle" aria-label="Alternar música de fundo" title="Música ambiente para oração">
+                        <span class="icone-som" id="iconeSom" aria-hidden="true">🎵</span>
+                        <span class="rotulo-som" id="rotuloSom">Música: Ligada</span>
+                    </button>
+                    <div class="audio-volume-wrapper" title="Ajustar volume da música">
+                        <span class="volume-icone" aria-hidden="true">🔉</span>
+                        <input type="range" id="sliderVolume" min="0" max="1" step="0.05" value="0.25" class="slider-volume" aria-label="Volume da música de oração">
+                    </div>
+                    <audio id="audioOracao" preload="none">
+                        <source src="audio/mixkit-rest-now-584.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+
                 <div class="timer-acoes">
                     <button type="button" class="btn btn-primario" id="btnIniciarTimer">
                         ▶ Iniciar Momento de Oração

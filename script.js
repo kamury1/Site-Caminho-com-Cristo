@@ -375,7 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =========================================================================
-    // 5. MOMENTO DE SILÊNCIO & ORAÇÃO (TIMER MEDITATIVO)
+    // 5. MOMENTO DE SILÊNCIO & ORAÇÃO (TIMER MEDITATIVO COM MÚSICA DE FUNDO)
     // =========================================================================
     const timerDisplay = document.getElementById("timerDisplay");
     const timerInstrucao = document.getElementById("timerInstrucao");
@@ -384,10 +384,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnResetarTimer = document.getElementById("btnResetarTimer");
     const botoesDuracao = document.querySelectorAll(".btn-duracao");
 
+    // Controles de Áudio
+    const audioOracao = document.getElementById("audioOracao");
+    const btnAudioToggle = document.getElementById("btnAudioToggle");
+    const iconeSom = document.getElementById("iconeSom");
+    const rotuloSom = document.getElementById("rotuloSom");
+    const sliderVolume = document.getElementById("sliderVolume");
+
     let duracaoSegundos = 60;
     let tempoRestante = 60;
     let timerInterval = null;
     let timerEmExecucao = false;
+    let timerEmPausa = false;
+
+    // Estado do Áudio
+    let audioMuted = localStorage.getItem("oracaoAudioMuted") === "true";
+    let volumeConfigurado = parseFloat(localStorage.getItem("oracaoAudioVolume")) || 0.25;
+    let fadeAudioInterval = null;
+    let fadeOutJaDisparado = false;
 
     function formatarTempo(segundos) {
         const mins = Math.floor(segundos / 60);
@@ -395,6 +409,146 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     }
 
+    function atualizarUIControlesAudio() {
+        if (sliderVolume) sliderVolume.value = volumeConfigurado;
+        if (btnAudioToggle) {
+            if (audioMuted) {
+                btnAudioToggle.classList.add("mutado");
+                btnAudioToggle.setAttribute("aria-label", "Ativar música de fundo");
+                btnAudioToggle.setAttribute("title", "Música de fundo: Desligada (clique para ativar)");
+                if (iconeSom) iconeSom.textContent = "🔇";
+                if (rotuloSom) rotuloSom.textContent = "Música: Desligada";
+            } else {
+                btnAudioToggle.classList.remove("mutado");
+                btnAudioToggle.setAttribute("aria-label", "Desativar música de fundo");
+                btnAudioToggle.setAttribute("title", "Música de fundo: Ligada (clique para silenciar)");
+                if (iconeSom) iconeSom.textContent = "🎵";
+                if (rotuloSom) rotuloSom.textContent = "Música: Ligada";
+            }
+        }
+    }
+
+    // FADE IN SUAVE
+    function iniciarAudioComFadeIn(duracaoMs = 3500) {
+        if (!audioOracao || audioMuted) return;
+        clearInterval(fadeAudioInterval);
+
+        audioOracao.volume = 0.01;
+        const alvo = volumeConfigurado;
+        const passoTempo = 50;
+        const passosTotais = duracaoMs / passoTempo;
+        const incremento = Math.max(0.005, alvo / passosTotais);
+
+        const playPromise = audioOracao.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                fadeAudioInterval = setInterval(() => {
+                    if (audioOracao.volume + incremento < alvo) {
+                        audioOracao.volume += incremento;
+                    } else {
+                        audioOracao.volume = alvo;
+                        clearInterval(fadeAudioInterval);
+                    }
+                }, passoTempo);
+            }).catch(erro => {
+                console.warn("Reprodução de áudio respeitando autoplay do navegador:", erro);
+            });
+        }
+    }
+
+    // FADE OUT SUAVE
+    function finalizarAudioComFadeOut(duracaoMs = 4000, callback) {
+        if (!audioOracao) {
+            if (callback) callback();
+            return;
+        }
+        clearInterval(fadeAudioInterval);
+
+        const volumeInicial = audioOracao.volume;
+        if (volumeInicial <= 0.01 || audioOracao.paused) {
+            audioOracao.pause();
+            audioOracao.currentTime = 0;
+            if (callback) callback();
+            return;
+        }
+
+        const passoTempo = 50;
+        const passosTotais = duracaoMs / passoTempo;
+        const decremento = Math.max(0.005, volumeInicial / passosTotais);
+
+        fadeAudioInterval = setInterval(() => {
+            if (audioOracao.volume - decremento > 0.01) {
+                audioOracao.volume -= decremento;
+            } else {
+                audioOracao.volume = 0;
+                audioOracao.pause();
+                audioOracao.currentTime = 0;
+                clearInterval(fadeAudioInterval);
+                if (callback) callback();
+            }
+        }, passoTempo);
+    }
+
+    function pausarAudioImediato() {
+        if (!audioOracao) return;
+        clearInterval(fadeAudioInterval);
+        audioOracao.pause();
+    }
+
+    function retomarAudioImediato() {
+        if (!audioOracao || audioMuted) return;
+        clearInterval(fadeAudioInterval);
+        audioOracao.volume = volumeConfigurado;
+        audioOracao.play().catch(e => console.warn(e));
+    }
+
+    function resetarAudioCompleto() {
+        if (!audioOracao) return;
+        clearInterval(fadeAudioInterval);
+        audioOracao.pause();
+        audioOracao.currentTime = 0;
+        audioOracao.volume = volumeConfigurado;
+        fadeOutJaDisparado = false;
+    }
+
+    // Eventos dos Controles de Áudio
+    if (btnAudioToggle) {
+        btnAudioToggle.addEventListener("click", () => {
+            audioMuted = !audioMuted;
+            try {
+                localStorage.setItem("oracaoAudioMuted", String(audioMuted));
+            } catch (e) {}
+
+            atualizarUIControlesAudio();
+
+            if (timerEmExecucao) {
+                if (audioMuted) {
+                    pausarAudioImediato();
+                    mostrarToast("Música silenciada para o momento de oração.", "info", "🔇");
+                } else {
+                    retomarAudioImediato();
+                    mostrarToast("Música ativada com serenidade.", "info", "🎵");
+                }
+            }
+        });
+    }
+
+    if (sliderVolume) {
+        sliderVolume.addEventListener("input", (e) => {
+            volumeConfigurado = parseFloat(e.target.value);
+            try {
+                localStorage.setItem("oracaoAudioVolume", String(volumeConfigurado));
+            } catch (e) {}
+
+            if (audioOracao && !audioMuted && !audioOracao.paused) {
+                audioOracao.volume = volumeConfigurado;
+            }
+        });
+    }
+
+    atualizarUIControlesAudio();
+
+    // Seleção de Duração
     botoesDuracao.forEach(btn => {
         btn.addEventListener("click", () => {
             if (timerEmExecucao) return;
@@ -403,13 +557,15 @@ document.addEventListener("DOMContentLoaded", () => {
             duracaoSegundos = parseInt(btn.getAttribute("data-segundos"), 10);
             tempoRestante = duracaoSegundos;
             if (timerDisplay) timerDisplay.textContent = formatarTempo(tempoRestante);
+            resetarAudioCompleto();
         });
     });
 
+    // Iniciar / Pausar Timer
     if (btnIniciarTimer && timerDisplay) {
         btnIniciarTimer.addEventListener("click", () => {
             if (!timerEmExecucao) {
-                // Iniciar
+                // Iniciar ou Retomar
                 timerEmExecucao = true;
                 btnIniciarTimer.textContent = "⏸ Pausar";
                 btnIniciarTimer.classList.remove("btn-primario");
@@ -418,18 +574,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (timerPulso) timerPulso.classList.add("respirando");
                 if (timerInstrucao) timerInstrucao.textContent = "Respire suavemente e ore a Deus...";
 
+                if (!timerEmPausa) {
+                    // Início novo
+                    resetarAudioCompleto();
+                    iniciarAudioComFadeIn(3500);
+                } else {
+                    // Retomada da pausa
+                    retomarAudioImediato();
+                    timerEmPausa = false;
+                }
+
                 timerInterval = setInterval(() => {
                     tempoRestante--;
                     timerDisplay.textContent = formatarTempo(tempoRestante);
 
+                    // Fade out suave nos últimos 5 segundos
+                    if (tempoRestante <= 5 && !fadeOutJaDisparado) {
+                        fadeOutJaDisparado = true;
+                        finalizarAudioComFadeOut(4800);
+                    }
+
                     if (tempoRestante <= 0) {
                         clearInterval(timerInterval);
                         timerEmExecucao = false;
+                        timerEmPausa = false;
                         if (timerPulso) timerPulso.classList.remove("respirando");
                         if (timerInstrucao) timerInstrucao.textContent = "Momento de oração concluído!";
                         btnIniciarTimer.textContent = "▶ Iniciar Novamente";
                         btnIniciarTimer.classList.add("btn-primario");
                         btnIniciarTimer.classList.remove("btn-secundario");
+                        resetarAudioCompleto();
                         mostrarToast("Seu momento de oração foi concluído na paz de Deus!", "sucesso", "🕊️");
                     }
                 }, 1000);
@@ -437,19 +611,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Pausar
                 clearInterval(timerInterval);
                 timerEmExecucao = false;
+                timerEmPausa = true;
                 btnIniciarTimer.textContent = "▶ Continuar";
                 btnIniciarTimer.classList.add("btn-primario");
                 btnIniciarTimer.classList.remove("btn-secundario");
                 if (timerPulso) timerPulso.classList.remove("respirando");
                 if (timerInstrucao) timerInstrucao.textContent = "Pausado";
+                pausarAudioImediato();
             }
         });
     }
 
+    // Resetar Timer
     if (btnResetarTimer) {
         btnResetarTimer.addEventListener("click", () => {
             clearInterval(timerInterval);
             timerEmExecucao = false;
+            timerEmPausa = false;
             tempoRestante = duracaoSegundos;
             if (timerDisplay) timerDisplay.textContent = formatarTempo(tempoRestante);
             if (timerPulso) timerPulso.classList.remove("respirando");
@@ -458,6 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnIniciarTimer.classList.add("btn-primario");
             btnIniciarTimer.classList.remove("btn-secundario");
             btnResetarTimer.style.display = "none";
+            resetarAudioCompleto();
         });
     }
 
