@@ -1,13 +1,82 @@
 /**
- * CAMINHO COM CRISTO - SCRIPT PRINCIPAL
- * Gerencia a navegação, devocional diário, reflexão interativa,
- * registro de leituras bíblicas e espaço de orações com persistência local.
+ * CAMINHO COM CRISTO - SCRIPT PRINCIPAL (2026)
+ * Gerencia devocional dinâmico, leitura por voz, timer de oração meditativo,
+ * diário bíblico, mural de orações, backup/restore e notificações modernas.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // ==========================================
-    // UTILITÁRIOS & SEGURANÇA (ANTI-XSS)
-    // ==========================================
+
+    // =========================================================================
+    // 1. BANCO DE DADOS DEVOCIONAL (VERSÍCULOS & REFLEXÕES CRISTÃS)
+    // =========================================================================
+    const DEVOCIONAIS = [
+        {
+            titulo: "Encontre descanso em Cristo",
+            tema: "Paz e Descanso",
+            texto: "Vinde a mim, todos vós que estais cansados e carregados de fardos, e eu vos darei descanso.",
+            referencia: "Mateus 11:28",
+            previa: "Há dias em que o peso da caminhada parece maior do que conseguimos carregar. Cristo não nos pede que enfrentemos as tempestades com as próprias forças. Ele nos faz um convite de amor: aproximarmo-nos Dele e descansarmos em sua fidelidade.",
+            completa: [
+                "Quando Jesus nos chama para junto de Si, isso não significa que todas as aflições desaparecerão num piscar de olhos. Significa que não precisamos mais suportar os fardos da vida solitariamente.",
+                "A fé verdadeira é aprender a confiar e repousar em Deus mesmo quando as circunstâncias ao redor ainda não mostram uma solução imediata. Cristo caminha conosco em cada passo da jornada, sustentando nossa alma com graça suficiente para cada novo dia."
+            ],
+            pensamento: "A sua força não vem de carregar tudo sozinho, mas de entregar tudo nas mãos daquele que cuida de você."
+        },
+        {
+            titulo: "O Bom Pastor que tudo supre",
+            tema: "Provisão e Cuidado",
+            texto: "O Senhor é o meu pastor; de nada terei falta. Em verdes pastagens me faz repousar e me conduz a águas tranquilas.",
+            referencia: "Salmos 23:1-2",
+            previa: "Nas incertezas do amanhã, o cuidado de Deus permanece inabalável. Ele conhece o caminho adiante e nos guia com amor paternal aos mananciais de paz e restauração.",
+            completa: [
+                "Davi conhecia a vida nos campos e sabia que a ovelha depende inteiramente do pastor para proteção e alimento. Da mesma forma, nossa alma encontra plena segurança ao descansar na providência divina.",
+                "Mesmo quando atravessamos vales escuros, não estamos desamparados. A presença do Senhor é escudo, bálsamo e luz para os nossos passos."
+            ],
+            pensamento: "Deus não apenas provê o que precisamos no tempo certo; Ele próprio é o nosso refúgio e maior tesouro."
+        },
+        {
+            titulo: "Força renovada na esperança",
+            tema: "Esperança e Renovação",
+            texto: "Aqueles que esperam no Senhor renovam as suas forças. Voam alto como águias; correm e não ficam exaustos, andam e não se cansam.",
+            referencia: "Isaías 40:31",
+            previa: "O cansaço humano é inevitável quando dependemos apenas de nossa energia física e mental. Contudo, há uma fonte inesgotável de vigor reservada àqueles que confiam no Deus Todo-Poderoso.",
+            completa: [
+                "Esperar em Deus não é inércia nem resignação passiva, mas uma atitude ativa de fé, onde entregamos o controle e alinhamos o nosso coração com a soberania celestial.",
+                "Quando confiamos no tempo do Senhor, Ele nos capacita a superar tempestades e a nos elevarmos acima dos medos que tentam nos paralisar."
+            ],
+            pensamento: "Quando as suas forças terminam, é exatamente onde a graça sustentadora de Deus começa a operar."
+        },
+        {
+            titulo: "A paz que excede todo entendimento",
+            tema: "Paz e Confiança",
+            texto: "Não andeis ansiosos por coisa alguma; antes, em tudo, sejam os vossos pedidos conhecidos diante de Deus pela oração e súplica, com ação de graças.",
+            referencia: "Filipenses 4:6",
+            previa: "A ansiedade tenta nos roubar a serenidade do presente antecipando incertezas futuras. A oração sincera é o antídoto divino que transforma preocupação em paz profunda.",
+            completa: [
+                "A oração com gratidão muda o nosso foco: deixamos de olhar para o tamanho do problema e contemplamos a grandeza do nosso Deus.",
+                "A paz de Cristo não depende da ausência de tribulações, mas da certeza inabalável de que o Senhor governa todas as coisas com sabedoria perfeita."
+            ],
+            pensamento: "Troque a inquietação da mente pelo joelho no chão e experimente a paz que guarda o coração."
+        },
+        {
+            titulo: "Amor do qual nada nos separa",
+            tema: "Amor Incondicional",
+            texto: "Pois estou convencido de que nem morte nem vida, nem anjos nem demônios, nem o presente nem o futuro... será capaz de nos separar do amor de Deus que está em Cristo Jesus.",
+            referencia: "Romanos 8:38-39",
+            previa: "Não há falha, crise ou dor que possa romper o vínculo eterno de amor que Cristo selou por nós na cruz. Você é profundamente amado pelo Pai celestial.",
+            completa: [
+                "Em dias difíceis, a dúvida tenta sussurrar que fomos esquecidos. Mas a Palavra declara que o amor de Deus é incondicional, eterno e inabalável.",
+                "Caminhe hoje com a certeza de que a mão que sustenta as estrelas é a mesma mão que acolhe e guarda o seu coração com carinho infinito."
+            ],
+            pensamento: "O amor de Deus por você não oscila com o seu desempenho; ele é eterno, seguro e suficiente."
+        }
+    ];
+
+    let indiceDevocionalAtual = 0;
+
+    // =========================================================================
+    // 2. UTILITÁRIOS, SEGURANÇA (ANTI-XSS) E NOTIFICAÇÕES
+    // =========================================================================
     function escaparHTML(texto) {
         if (!texto) return "";
         return String(texto)
@@ -18,44 +87,96 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/'/g, "&#039;");
     }
 
-    function obterDataFormatada() {
-        const hoje = new Date();
-        return hoje.toLocaleDateString("pt-BR", {
+    function obterDataHoje() {
+        return new Date().toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric"
         });
     }
 
-    function exibirFeedback(elementoId, mensagem, tipo = "sucesso") {
-        const elemento = document.getElementById(elementoId);
-        if (!elemento) return;
+    // SISTEMA MODERNO DE TOAST
+    function mostrarToast(mensagem, tipo = "sucesso", icone = "") {
+        const container = document.getElementById("toastContainer");
+        if (!container) return;
 
-        elemento.textContent = mensagem;
-        elemento.className = `feedback-msg ${tipo}`;
+        const icones = {
+            sucesso: "✓",
+            erro: "✕",
+            info: "ℹ"
+        };
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${tipo}`;
+        toast.innerHTML = `
+            <span class="toast-icone" style="font-weight: bold; color: var(--dourado-luz);">${icone || icones[tipo] || "•"}</span>
+            <span class="toast-msg">${escaparHTML(mensagem)}</span>
+        `;
+
+        container.appendChild(toast);
 
         setTimeout(() => {
-            elemento.className = "feedback-msg";
-            elemento.textContent = "";
+            toast.style.opacity = "0";
+            toast.style.transform = "translateX(-30px)";
+            setTimeout(() => toast.remove(), 350);
         }, 4000);
     }
 
-    // ==========================================
-    // NAVEGAÇÃO & MENU MOBILE
-    // ==========================================
+    // MODAL DE CONFIRMAÇÃO ELEGANTE
+    function abrirModalConfirmacao(titulo, mensagem, callbackConfirmar, icone = "⚠️") {
+        const modal = document.getElementById("modalConfirmacao");
+        const elTitulo = document.getElementById("modalTitulo");
+        const elMensagem = document.getElementById("modalMensagem");
+        const elIcone = document.getElementById("modalIcone");
+        const btnConfirmar = document.getElementById("btnModalConfirmar");
+        const btnCancelar = document.getElementById("btnModalCancelar");
+
+        if (!modal) {
+            if (confirm(mensagem)) callbackConfirmar();
+            return;
+        }
+
+        elTitulo.textContent = titulo;
+        elMensagem.textContent = mensagem;
+        elIcone.textContent = icone;
+
+        modal.classList.add("ativo");
+        modal.setAttribute("aria-hidden", "false");
+
+        const fecharModal = () => {
+            modal.classList.remove("ativo");
+            modal.setAttribute("aria-hidden", "true");
+            btnConfirmar.onclick = null;
+            btnCancelar.onclick = null;
+        };
+
+        btnConfirmar.onclick = () => {
+            fecharModal();
+            callbackConfirmar();
+        };
+
+        btnCancelar.onclick = fecharModal;
+
+        modal.onclick = (e) => {
+            if (e.target === modal) fecharModal();
+        };
+    }
+
+    // =========================================================================
+    // 3. NAVEGAÇÃO, SCROLLSPY & MENU MOBILE
+    // =========================================================================
     const menuToggle = document.getElementById("menuToggle");
     const navMenu = document.getElementById("navMenu");
-    const linksMenu = document.querySelectorAll(".menu a");
+    const navLinks = document.querySelectorAll(".nav-link");
 
     if (menuToggle && navMenu) {
         menuToggle.addEventListener("click", () => {
-            const estaAberto = navMenu.classList.toggle("aberto");
-            menuToggle.classList.toggle("ativo", estaAberto);
-            menuToggle.setAttribute("aria-expanded", String(estaAberto));
+            const aberto = navMenu.classList.toggle("aberto");
+            menuToggle.classList.toggle("ativo", aberto);
+            menuToggle.setAttribute("aria-expanded", String(aberto));
         });
 
-        // Fechar menu ao clicar em qualquer link
-        linksMenu.forEach(link => {
+        navLinks.forEach(link => {
             link.addEventListener("click", () => {
                 navMenu.classList.remove("aberto");
                 menuToggle.classList.remove("ativo");
@@ -63,9 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Fechar menu se clicar fora dele
-        document.addEventListener("click", (evento) => {
-            if (!navMenu.contains(evento.target) && !menuToggle.contains(evento.target)) {
+        document.addEventListener("click", (e) => {
+            if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                 navMenu.classList.remove("aberto");
                 menuToggle.classList.remove("ativo");
                 menuToggle.setAttribute("aria-expanded", "false");
@@ -73,22 +193,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Botão do Hero: Começar Caminhada
-    const btnHeroComecar = document.getElementById("btnComecarCaminhada");
-    if (btnHeroComecar) {
-        btnHeroComecar.addEventListener("click", () => {
-            const secaoPalavra = document.getElementById("palavra");
-            if (secaoPalavra) {
-                secaoPalavra.scrollIntoView({ behavior: "smooth" });
+    // ScrollSpy (Destaque da seção ativa)
+    const secoes = document.querySelectorAll("header[id], section[id]");
+    window.addEventListener("scroll", () => {
+        let topoAtual = window.scrollY + 160;
+
+        secoes.forEach(secao => {
+            const id = secao.getAttribute("id");
+            const top = secao.offsetTop;
+            const altura = secao.offsetHeight;
+
+            if (topoAtual >= top && topoAtual < top + altura) {
+                navLinks.forEach(link => {
+                    link.classList.remove("ativo");
+                    if (link.getAttribute("href") === `#${id}`) {
+                        link.classList.add("ativo");
+                    }
+                });
             }
         });
-    }
+    });
 
     // Botão Voltar ao Topo
     const btnVoltarTopo = document.getElementById("btnVoltarTopo");
     if (btnVoltarTopo) {
         window.addEventListener("scroll", () => {
-            if (window.scrollY > 350) {
+            if (window.scrollY > 380) {
                 btnVoltarTopo.classList.add("visivel");
             } else {
                 btnVoltarTopo.classList.remove("visivel");
@@ -100,98 +230,309 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ==========================================
-    // SEÇÃO PALAVRA DO DIA: EXPANDIR REFLEXÃO
-    // ==========================================
-    const botaoReflexao = document.getElementById("btnToggleReflexao") || document.querySelector(".botao-reflexao");
+    // =========================================================================
+    // 4. PALAVRA DO DIA & FERRAMENTAS BÍBLICAS
+    // =========================================================================
+    const elTema = document.getElementById("devocionalTema");
+    const elTitulo = document.getElementById("titulo-palavra");
+    const elTexto = document.getElementById("devocionalTexto");
+    const elReferencia = document.getElementById("devocionalReferencia");
+    const elPrevia = document.getElementById("reflexaoPrevia");
+    const elCompletaConteudo = document.getElementById("reflexaoCompletaConteudo");
+    const btnToggleReflexao = document.getElementById("btnToggleReflexao");
     const reflexaoCompleta = document.getElementById("reflexaoCompleta");
 
-    if (botaoReflexao && reflexaoCompleta) {
-        botaoReflexao.addEventListener("click", () => {
+    function renderizarDevocional(indice) {
+        const item = DEVOCIONAIS[indice % DEVOCIONAIS.length];
+        if (!item) return;
+
+        if (elTema) elTema.textContent = item.tema;
+        if (elTitulo) elTitulo.textContent = item.titulo;
+        if (elTexto) elTexto.textContent = item.texto;
+        if (elReferencia) elReferencia.textContent = item.referencia;
+
+        if (elPrevia) {
+            elPrevia.innerHTML = `<p>${escaparHTML(item.previa)}</p>`;
+        }
+
+        if (elCompletaConteudo) {
+            const paragrafos = item.completa.map(p => `<p>${escaparHTML(p)}</p>`).join("");
+            const pensamentoHTML = item.pensamento 
+                ? `<div class="reflexao-pensamento-chave">
+                       <span class="pensamento-icone">💡</span>
+                       <em>Guarde hoje: ${escaparHTML(item.pensamento)}</em>
+                   </div>`
+                : "";
+
+            elCompletaConteudo.innerHTML = paragrafos + pensamentoHTML;
+        }
+
+        // Recolhe a reflexão ao trocar de versículo
+        if (reflexaoCompleta && reflexaoCompleta.classList.contains("aberta")) {
+            reflexaoCompleta.classList.remove("aberta");
+            if (btnToggleReflexao) {
+                btnToggleReflexao.classList.remove("ativo");
+                btnToggleReflexao.querySelector(".btn-toggle-texto").textContent = "Ler reflexão completa";
+            }
+        }
+    }
+
+    // Alternar reflexão (Expandir / Recolher)
+    if (btnToggleReflexao && reflexaoCompleta) {
+        btnToggleReflexao.addEventListener("click", () => {
             const aberta = reflexaoCompleta.classList.toggle("aberta");
-            botaoReflexao.setAttribute("aria-expanded", String(aberta));
+            btnToggleReflexao.classList.toggle("ativo", aberta);
+            btnToggleReflexao.setAttribute("aria-expanded", String(aberta));
             reflexaoCompleta.setAttribute("aria-hidden", String(!aberta));
 
-            if (aberta) {
-                botaoReflexao.textContent = "Fechar reflexão ↑";
-            } else {
-                botaoReflexao.textContent = "Ler reflexão →";
+            const textoSpan = btnToggleReflexao.querySelector(".btn-toggle-texto");
+            if (textoSpan) {
+                textoSpan.textContent = aberta ? "Fechar reflexão" : "Ler reflexão completa";
             }
         });
     }
 
-    // ==========================================
-    // MINHA CAMINHADA (REGISTRO BÍBLICO)
-    // ==========================================
-    const botaoSalvarLeitura = document.getElementById("salvarLeitura");
-    const botaoCancelarEdicaoLeitura = document.getElementById("cancelarEdicaoLeitura");
+    // Próximo Versículo
+    const btnProximoDevocional = document.getElementById("btnProximoDevocional");
+    if (btnProximoDevocional) {
+        btnProximoDevocional.addEventListener("click", () => {
+            indiceDevocionalAtual = (indiceDevocionalAtual + 1) % DEVOCIONAIS.length;
+            renderizarDevocional(indiceDevocionalAtual);
+            mostrarToast("Novo versículo carregado!", "info", "📖");
+        });
+    }
+
+    // Copiar Versículo
+    const btnCopiarVersiculo = document.getElementById("btnCopiarVersiculo");
+    if (btnCopiarVersiculo) {
+        btnCopiarVersiculo.addEventListener("click", () => {
+            const item = DEVOCIONAIS[indiceDevocionalAtual];
+            const textoCompleto = `“${item.texto}” — ${item.referencia}\n\nCaminho com Cristo: Fé e Palavra diária.`;
+            
+            navigator.clipboard.writeText(textoCompleto)
+                .then(() => mostrarToast("Versículo copiado para a área de transferência!", "sucesso", "📋"))
+                .catch(() => mostrarToast("Não foi possível copiar automaticamente.", "erro"));
+        });
+    }
+
+    // Compartilhar WhatsApp
+    const btnCompartilharWhatsApp = document.getElementById("btnCompartilharWhatsApp");
+    if (btnCompartilharWhatsApp) {
+        btnCompartilharWhatsApp.addEventListener("click", () => {
+            const item = DEVOCIONAIS[indiceDevocionalAtual];
+            const mensagem = `✨ *Palavra do Dia - Caminho com Cristo*\n\n“${item.texto}”\n📖 *${item.referencia}*\n\n_${item.previa}_`;
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, "_blank");
+        });
+    }
+
+    // Ouvir Palavra (Leitura de Voz - SpeechSynthesis)
+    const btnOuvirVersiculo = document.getElementById("btnOuvirVersiculo");
+    let vozFalando = false;
+
+    if (btnOuvirVersiculo && "speechSynthesis" in window) {
+        btnOuvirVersiculo.addEventListener("click", () => {
+            if (vozFalando) {
+                window.speechSynthesis.cancel();
+                vozFalando = false;
+                btnOuvirVersiculo.querySelector(".btn-texto-curto").textContent = "Ouvir";
+                mostrarToast("Áudio pausado.", "info");
+                return;
+            }
+
+            const item = DEVOCIONAIS[indiceDevocionalAtual];
+            const textoParaVoz = `${item.titulo}. Versículo: ${item.texto}. ${item.referencia}. Reflexão: ${item.previa}`;
+            
+            const utterance = new SpeechSynthesisUtterance(textoParaVoz);
+            utterance.lang = "pt-BR";
+            utterance.rate = 0.95;
+            utterance.pitch = 1.0;
+
+            utterance.onstart = () => {
+                vozFalando = true;
+                btnOuvirVersiculo.querySelector(".btn-texto-curto").textContent = "Pausar";
+                mostrarToast("Reproduzindo reflexão em áudio...", "info", "🔊");
+            };
+
+            utterance.onend = () => {
+                vozFalando = false;
+                btnOuvirVersiculo.querySelector(".btn-texto-curto").textContent = "Ouvir";
+            };
+
+            utterance.onerror = () => {
+                vozFalando = false;
+                btnOuvirVersiculo.querySelector(".btn-texto-curto").textContent = "Ouvir";
+            };
+
+            window.speechSynthesis.speak(utterance);
+        });
+    }
+
+    // Escolhe o versículo do dia baseado no dia do ano
+    const diaDoAno = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+    indiceDevocionalAtual = diaDoAno % DEVOCIONAIS.length;
+    renderizarDevocional(indiceDevocionalAtual);
+
+
+    // =========================================================================
+    // 5. MOMENTO DE SILÊNCIO & ORAÇÃO (TIMER MEDITATIVO)
+    // =========================================================================
+    const timerDisplay = document.getElementById("timerDisplay");
+    const timerInstrucao = document.getElementById("timerInstrucao");
+    const timerPulso = document.getElementById("timerPulso");
+    const btnIniciarTimer = document.getElementById("btnIniciarTimer");
+    const btnResetarTimer = document.getElementById("btnResetarTimer");
+    const botoesDuracao = document.querySelectorAll(".btn-duracao");
+
+    let duracaoSegundos = 60;
+    let tempoRestante = 60;
+    let timerInterval = null;
+    let timerEmExecucao = false;
+
+    function formatarTempo(segundos) {
+        const mins = Math.floor(segundos / 60);
+        const secs = segundos % 60;
+        return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    botoesDuracao.forEach(btn => {
+        btn.addEventListener("click", () => {
+            if (timerEmExecucao) return;
+            botoesDuracao.forEach(b => b.classList.remove("ativo"));
+            btn.classList.add("ativo");
+            duracaoSegundos = parseInt(btn.getAttribute("data-segundos"), 10);
+            tempoRestante = duracaoSegundos;
+            if (timerDisplay) timerDisplay.textContent = formatarTempo(tempoRestante);
+        });
+    });
+
+    if (btnIniciarTimer && timerDisplay) {
+        btnIniciarTimer.addEventListener("click", () => {
+            if (!timerEmExecucao) {
+                // Iniciar
+                timerEmExecucao = true;
+                btnIniciarTimer.textContent = "⏸ Pausar";
+                btnIniciarTimer.classList.remove("btn-primario");
+                btnIniciarTimer.classList.add("btn-secundario");
+                if (btnResetarTimer) btnResetarTimer.style.display = "inline-flex";
+                if (timerPulso) timerPulso.classList.add("respirando");
+                if (timerInstrucao) timerInstrucao.textContent = "Respire suavemente e ore a Deus...";
+
+                timerInterval = setInterval(() => {
+                    tempoRestante--;
+                    timerDisplay.textContent = formatarTempo(tempoRestante);
+
+                    if (tempoRestante <= 0) {
+                        clearInterval(timerInterval);
+                        timerEmExecucao = false;
+                        if (timerPulso) timerPulso.classList.remove("respirando");
+                        if (timerInstrucao) timerInstrucao.textContent = "Momento de oração concluído!";
+                        btnIniciarTimer.textContent = "▶ Iniciar Novamente";
+                        btnIniciarTimer.classList.add("btn-primario");
+                        btnIniciarTimer.classList.remove("btn-secundario");
+                        mostrarToast("Seu momento de oração foi concluído na paz de Deus!", "sucesso", "🕊️");
+                    }
+                }, 1000);
+            } else {
+                // Pausar
+                clearInterval(timerInterval);
+                timerEmExecucao = false;
+                btnIniciarTimer.textContent = "▶ Continuar";
+                btnIniciarTimer.classList.add("btn-primario");
+                btnIniciarTimer.classList.remove("btn-secundario");
+                if (timerPulso) timerPulso.classList.remove("respirando");
+                if (timerInstrucao) timerInstrucao.textContent = "Pausado";
+            }
+        });
+    }
+
+    if (btnResetarTimer) {
+        btnResetarTimer.addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerEmExecucao = false;
+            tempoRestante = duracaoSegundos;
+            if (timerDisplay) timerDisplay.textContent = formatarTempo(tempoRestante);
+            if (timerPulso) timerPulso.classList.remove("respirando");
+            if (timerInstrucao) timerInstrucao.textContent = "Pronto para orar";
+            btnIniciarTimer.textContent = "▶ Iniciar Momento de Oração";
+            btnIniciarTimer.classList.add("btn-primario");
+            btnIniciarTimer.classList.remove("btn-secundario");
+            btnResetarTimer.style.display = "none";
+        });
+    }
+
+
+    // =========================================================================
+    // 6. DIÁRIO DE LEITURA BÍBLICA (MINHA CAMINHADA)
+    // =========================================================================
     const campoLivro = document.getElementById("livro");
     const campoCapitulo = document.getElementById("capitulo");
     const campoAprendizado = document.getElementById("aprendizado");
+    const botaoSalvarLeitura = document.getElementById("salvarLeitura");
+    const botaoCancelarEdicaoLeitura = document.getElementById("cancelarEdicaoLeitura");
     const listaLeituras = document.getElementById("listaLeituras");
+    const buscaLeituras = document.getElementById("buscaLeituras");
+    const contagemLeituras = document.getElementById("contagemLeituras");
+    const statLeituras = document.getElementById("statLeituras");
+    const tituloFormLeitura = document.getElementById("tituloFormLeitura");
 
+    let leituras = carregarDados("leiturasBiblicas");
     let indiceEdicaoLeitura = null;
 
-    let leituras = [];
-    try {
-        leituras = JSON.parse(localStorage.getItem("leiturasBiblicas")) || [];
-    } catch (e) {
-        leituras = [];
-    }
+    // Atalhos de Livros Bíblicos
+    document.querySelectorAll(".pill-livro").forEach(pill => {
+        pill.addEventListener("click", () => {
+            if (campoLivro) {
+                campoLivro.value = pill.getAttribute("data-livro");
+                if (campoCapitulo) campoCapitulo.focus();
+            }
+        });
+    });
 
-    function salvarLeiturasStorage() {
-        try {
-            localStorage.setItem("leiturasBiblicas", JSON.stringify(leituras));
-        } catch (e) {
-            console.error("Erro ao salvar leituras no localStorage:", e);
-        }
-    }
-
-    function limparFormularioLeitura() {
-        campoLivro.value = "";
-        campoCapitulo.value = "";
-        campoAprendizado.value = "";
-        indiceEdicaoLeitura = null;
-        botaoSalvarLeitura.textContent = "Salvar leitura";
-        if (botaoCancelarEdicaoLeitura) {
-            botaoCancelarEdicaoLeitura.style.display = "none";
-        }
-    }
-
-    function renderizarLeituras() {
+    function renderizarLeituras(termoBusca = "") {
         if (!listaLeituras) return;
 
-        if (leituras.length === 0) {
+        const termo = termoBusca.toLowerCase().trim();
+        const itensFiltrados = leituras.filter(item => {
+            if (!termo) return true;
+            return (item.livro && item.livro.toLowerCase().includes(termo)) ||
+                   (item.aprendizado && item.aprendizado.toLowerCase().includes(termo));
+        });
+
+        if (contagemLeituras) contagemLeituras.textContent = leituras.length;
+        if (statLeituras) statLeituras.textContent = leituras.length;
+
+        if (itensFiltrados.length === 0) {
             listaLeituras.innerHTML = `
-                <p class="sem-leituras">
-                    Nenhuma leitura registrada ainda. Faça sua primeira anotação acima!
-                </p>
+                <div class="estado-vazio">
+                    <div class="estado-vazio-icone">📖</div>
+                    <p>${termo ? "Nenhuma leitura encontrada com esse termo." : "Nenhuma leitura registrada ainda. Adicione sua primeira reflexão acima!"}</p>
+                </div>
             `;
             return;
         }
 
         listaLeituras.innerHTML = "";
 
-        leituras.forEach((leitura, indice) => {
+        itensFiltrados.forEach((item, indexOriginal) => {
+            // Localiza o índice real no array original
+            const indiceReal = leituras.indexOf(item);
             const card = document.createElement("div");
-            card.className = "leitura-registrada";
-
-            const livroEscapado = escaparHTML(leitura.livro);
-            const capituloEscapado = escaparHTML(leitura.capitulo);
-            const aprendizadoEscapado = escaparHTML(leitura.aprendizado);
-            const dataFormatada = leitura.data ? escaparHTML(leitura.data) : "Leitura salva";
+            card.className = "registro-card";
 
             card.innerHTML = `
-                <div class="cabecalho-card">
-                    <h4>${livroEscapado} — Capítulo ${capituloEscapado}</h4>
-                    <span class="data-badge">${dataFormatada}</span>
+                <div class="registro-cabecalho">
+                    <h4 class="registro-titulo">${escaparHTML(item.livro)} — Cap. ${escaparHTML(item.capitulo)}</h4>
+                    <div class="registro-meta-tags">
+                        <span class="badge-tag">${escaparHTML(item.data || "Leitura salva")}</span>
+                    </div>
                 </div>
-                <p>${aprendizadoEscapado}</p>
-                <div class="botoes-card">
-                    <button class="botao-editar" data-indice="${indice}" type="button" aria-label="Editar leitura de ${livroEscapado}">
+                <p class="registro-texto">${escaparHTML(item.aprendizado)}</p>
+                <div class="registro-acoes">
+                    <button type="button" class="btn-card-acao btn-card-editar" data-indice="${indiceReal}">
                         ✎ Editar
                     </button>
-                    <button class="botao-excluir" data-indice="${indice}" type="button" aria-label="Excluir leitura de ${livroEscapado}">
+                    <button type="button" class="btn-card-acao btn-card-excluir" data-indice="${indiceReal}">
                         🗑 Excluir
                     </button>
                 </div>
@@ -200,18 +541,32 @@ document.addEventListener("DOMContentLoaded", () => {
             listaLeituras.appendChild(card);
         });
 
-        // Adicionar eventos nos botões recém-criados
-        listaLeituras.querySelectorAll(".botao-editar").forEach(btn => {
+        // Eventos nos botões
+        listaLeituras.querySelectorAll(".btn-card-editar").forEach(btn => {
             btn.addEventListener("click", () => {
                 const idx = parseInt(btn.getAttribute("data-indice"), 10);
                 iniciarEdicaoLeitura(idx);
             });
         });
 
-        listaLeituras.querySelectorAll(".botao-excluir").forEach(btn => {
+        listaLeituras.querySelectorAll(".btn-card-excluir").forEach(btn => {
             btn.addEventListener("click", () => {
                 const idx = parseInt(btn.getAttribute("data-indice"), 10);
-                excluirLeituraComConfirmacao(idx);
+                const item = leituras[idx];
+                const nome = item ? `${item.livro} ${item.capitulo}` : "esta leitura";
+                
+                abrirModalConfirmacao(
+                    "Excluir Leitura",
+                    `Deseja realmente remover o registro bíblico de ${nome}?`,
+                    () => {
+                        if (indiceEdicaoLeitura === idx) cancelarEdicaoLeitura();
+                        leituras.splice(idx, 1);
+                        salvarDados("leiturasBiblicas", leituras);
+                        renderizarLeituras(buscaLeituras ? buscaLeituras.value : "");
+                        mostrarToast("Leitura excluída com sucesso.", "info");
+                    },
+                    "🗑️"
+                );
             });
         });
     }
@@ -221,150 +576,156 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!item) return;
 
         indiceEdicaoLeitura = indice;
-        campoLivro.value = item.livro;
-        campoCapitulo.value = item.capitulo;
-        campoAprendizado.value = item.aprendizado;
+        if (campoLivro) campoLivro.value = item.livro;
+        if (campoCapitulo) campoCapitulo.value = item.capitulo;
+        if (campoAprendizado) campoAprendizado.value = item.aprendizado;
 
-        botaoSalvarLeitura.textContent = "Salvar alterações";
-        if (botaoCancelarEdicaoLeitura) {
-            botaoCancelarEdicaoLeitura.style.display = "inline-block";
-        }
+        if (tituloFormLeitura) tituloFormLeitura.textContent = "Editar Leitura Bíblica";
+        if (botaoSalvarLeitura) botaoSalvarLeitura.textContent = "Salvar alterações";
+        if (botaoCancelarEdicaoLeitura) botaoCancelarEdicaoLeitura.style.display = "inline-flex";
 
         campoLivro.focus();
         campoLivro.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
-    function excluirLeituraComConfirmacao(indice) {
-        const item = leituras[indice];
-        const nomeLivro = item ? `${item.livro} ${item.capitulo}` : "esta leitura";
-        
-        if (confirm(`Deseja realmente excluir a leitura de ${nomeLivro}?`)) {
-            // Se estava editando este item, cancela a edição
-            if (indiceEdicaoLeitura === indice) {
-                limparFormularioLeitura();
-            } else if (indiceEdicaoLeitura > indice) {
-                indiceEdicaoLeitura--;
-            }
+    function cancelarEdicaoLeitura() {
+        indiceEdicaoLeitura = null;
+        if (campoLivro) campoLivro.value = "";
+        if (campoCapitulo) campoCapitulo.value = "";
+        if (campoAprendizado) campoAprendizado.value = "";
 
-            leituras.splice(indice, 1);
-            salvarLeiturasStorage();
-            renderizarLeituras();
-            exibirFeedback("feedbackLeitura", "Leitura excluída com sucesso.", "sucesso");
-        }
+        if (tituloFormLeitura) tituloFormLeitura.textContent = "Nova Leitura Bíblica";
+        if (botaoSalvarLeitura) botaoSalvarLeitura.textContent = "Salvar leitura no diário";
+        if (botaoCancelarEdicaoLeitura) botaoCancelarEdicaoLeitura.style.display = "none";
     }
 
     if (botaoCancelarEdicaoLeitura) {
-        botaoCancelarEdicaoLeitura.addEventListener("click", () => {
-            limparFormularioLeitura();
-            exibirFeedback("feedbackLeitura", "Edição cancelada.", "sucesso");
-        });
+        botaoCancelarEdicaoLeitura.addEventListener("click", cancelarEdicaoLeitura);
     }
 
     if (botaoSalvarLeitura) {
         botaoSalvarLeitura.addEventListener("click", () => {
-            const livro = campoLivro.value.trim();
-            const capitulo = campoCapitulo.value.trim();
-            const aprendizado = campoAprendizado.value.trim();
+            const livro = campoLivro ? campoLivro.value.trim() : "";
+            const capitulo = campoCapitulo ? campoCapitulo.value.trim() : "";
+            const aprendizado = campoAprendizado ? campoAprendizado.value.trim() : "";
 
             if (!livro || !capitulo || !aprendizado) {
-                exibirFeedback("feedbackLeitura", "Por favor, preencha todos os campos antes de salvar.", "erro");
+                mostrarToast("Preencha todos os campos da leitura antes de salvar.", "erro");
                 return;
             }
 
             if (indiceEdicaoLeitura !== null && leituras[indiceEdicaoLeitura]) {
-                // Atualização segura do item existente sem risco de perda
                 leituras[indiceEdicaoLeitura].livro = livro;
                 leituras[indiceEdicaoLeitura].capitulo = capitulo;
                 leituras[indiceEdicaoLeitura].aprendizado = aprendizado;
-                exibirFeedback("feedbackLeitura", "Leitura bíblica atualizada com sucesso!", "sucesso");
+                mostrarToast("Leitura bíblica atualizada com sucesso!", "sucesso", "📖");
             } else {
-                // Novo registro
                 const novaLeitura = {
-                    livro: livro,
-                    capitulo: capitulo,
-                    aprendizado: aprendizado,
-                    data: obterDataFormatada()
+                    livro,
+                    capitulo,
+                    aprendizado,
+                    data: obterDataHoje()
                 };
                 leituras.unshift(novaLeitura);
-                exibirFeedback("feedbackLeitura", "Leitura bíblica registrada com sucesso!", "sucesso");
+                mostrarToast("Leitura guardada no seu diário espiritual!", "sucesso", "✨");
             }
 
-            salvarLeiturasStorage();
-            limparFormularioLeitura();
-            renderizarLeituras();
+            salvarDados("leiturasBiblicas", leituras);
+            cancelarEdicaoLeitura();
+            renderizarLeituras(buscaLeituras ? buscaLeituras.value : "");
         });
     }
 
-    // ==========================================
-    // MINHAS ORAÇÕES
-    // ==========================================
+    if (buscaLeituras) {
+        buscaLeituras.addEventListener("input", (e) => {
+            renderizarLeituras(e.target.value);
+        });
+    }
+
+
+    // =========================================================================
+    // 7. MURAL DE ORAÇÕES (PEDIDOS & GRAÇAS ALCANÇADAS)
+    // =========================================================================
+    const campoPedidoOracao = document.getElementById("pedidoOracao");
+    const selectCategoriaOracao = document.getElementById("categoriaOracao");
     const botaoSalvarOracao = document.getElementById("salvarOracao");
     const botaoCancelarEdicaoOracao = document.getElementById("cancelarEdicaoOracao");
-    const campoPedidoOracao = document.getElementById("pedidoOracao");
     const listaOracoes = document.getElementById("listaOracoes");
+    const contagemOracoes = document.getElementById("contagemOracoes");
+    const statOracoes = document.getElementById("statOracoes");
+    const statGracas = document.getElementById("statGracas");
+    const tituloFormOracao = document.getElementById("tituloFormOracao");
+    const botoesFiltroOracao = document.querySelectorAll(".btn-filtro-oracao");
 
+    let oracoes = carregarDados("oracoes");
     let indiceEdicaoOracao = null;
+    let filtroOracaoAtual = "todas";
 
-    let oracoes = [];
-    try {
-        oracoes = JSON.parse(localStorage.getItem("oracoes")) || [];
-    } catch (e) {
-        oracoes = [];
-    }
-
-    function salvarOracoesStorage() {
-        try {
-            localStorage.setItem("oracoes", JSON.stringify(oracoes));
-        } catch (e) {
-            console.error("Erro ao salvar orações no localStorage:", e);
-        }
-    }
-
-    function limparFormularioOracao() {
-        campoPedidoOracao.value = "";
-        indiceEdicaoOracao = null;
-        botaoSalvarOracao.textContent = "Salvar oração";
-        if (botaoCancelarEdicaoOracao) {
-            botaoCancelarEdicaoOracao.style.display = "none";
-        }
-    }
+    botoesFiltroOracao.forEach(btn => {
+        btn.addEventListener("click", () => {
+            botoesFiltroOracao.forEach(b => {
+                b.classList.remove("ativo");
+                b.setAttribute("aria-selected", "false");
+            });
+            btn.classList.add("ativo");
+            btn.setAttribute("aria-selected", "true");
+            filtroOracaoAtual = btn.getAttribute("data-filtro");
+            renderizarOracoes();
+        });
+    });
 
     function renderizarOracoes() {
         if (!listaOracoes) return;
 
-        if (oracoes.length === 0) {
+        const totalGracas = oracoes.filter(o => o.atendida).length;
+        if (contagemOracoes) contagemOracoes.textContent = oracoes.length;
+        if (statOracoes) statOracoes.textContent = oracoes.length;
+        if (statGracas) statGracas.textContent = totalGracas;
+
+        const oracoesFiltradas = oracoes.filter(o => {
+            if (filtroOracaoAtual === "em_oracao") return !o.atendida;
+            if (filtroOracaoAtual === "graca_alcancada") return o.atendida;
+            return true;
+        });
+
+        if (oracoesFiltradas.length === 0) {
             listaOracoes.innerHTML = `
-                <p class="sem-oracoes">
-                    Nenhuma oração registrada ainda. Escreva seu pedido ou agradecimento acima!
-                </p>
+                <div class="estado-vazio">
+                    <div class="estado-vazio-icone">🙏</div>
+                    <p>${filtroOracaoAtual === "graca_alcancada" 
+                        ? "Nenhuma graça marcada ainda. Continue orando e confie no agir de Deus!" 
+                        : "Nenhuma oração registrada nesta categoria."}</p>
+                </div>
             `;
             return;
         }
 
         listaOracoes.innerHTML = "";
 
-        oracoes.forEach((oracao, indice) => {
+        oracoesFiltradas.forEach(item => {
+            const indiceReal = oracoes.indexOf(item);
             const card = document.createElement("div");
-            const estaAtendida = Boolean(oracao.atendida);
-            card.className = `oracao-registrada ${estaAtendida ? "oracao-atendida" : ""}`;
-
-            const textoEscapado = escaparHTML(oracao.texto);
-            const dataFormatada = oracao.data ? escaparHTML(oracao.data) : "Oração registrada";
+            card.className = `registro-card ${item.atendida ? "graca-alcancada" : ""}`;
 
             card.innerHTML = `
-                <div class="cabecalho-card">
-                    ${estaAtendida ? '<span class="tag-atendida">✓ GRAÇA ALCANÇADA / ORAÇÃO ATENDIDA</span>' : ''}
-                    <span class="data-badge">${dataFormatada}</span>
+                <div class="registro-cabecalho">
+                    <h4 class="registro-titulo">
+                        ${item.atendida ? "✓ GRAÇA ALCANÇADA" : "🕯️ EM ORAÇÃO"}
+                    </h4>
+                    <div class="registro-meta-tags">
+                        <span class="badge-tag badge-categoria">${escaparHTML(item.categoria || "Geral")}</span>
+                        <span class="badge-tag">${escaparHTML(item.data || "Registrado")}</span>
+                    </div>
                 </div>
-                <p>${textoEscapado}</p>
-                <div class="botoes-card">
-                    <button class="botao-atendida" data-indice="${indice}" type="button" aria-label="${estaAtendida ? 'Marcar como não atendida' : 'Marcar como atendida'}">
-                        ${estaAtendida ? "✓ Graça alcançada 🙏" : "Marcar como atendida"}
+                <p class="registro-texto">${escaparHTML(item.texto)}</p>
+                <div class="registro-acoes">
+                    <button type="button" class="btn-card-acao btn-card-status" data-indice="${indiceReal}">
+                        ${item.atendida ? "↺ Retornar para oração" : "✓ Marcar como graça alcançada"}
                     </button>
-                    <button class="botao-editar" data-indice="${indice}" type="button" aria-label="Editar oração">
+                    <button type="button" class="btn-card-acao btn-card-editar" data-indice="${indiceReal}">
                         ✎ Editar
                     </button>
-                    <button class="botao-excluir" data-indice="${indice}" type="button" aria-label="Excluir oração">
+                    <button type="button" class="btn-card-acao btn-card-excluir" data-indice="${indiceReal}">
                         🗑 Excluir
                     </button>
                 </div>
@@ -374,26 +735,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Eventos nos botões das orações
-        listaOracoes.querySelectorAll(".botao-atendida").forEach(btn => {
+        listaOracoes.querySelectorAll(".btn-card-status").forEach(btn => {
             btn.addEventListener("click", () => {
                 const idx = parseInt(btn.getAttribute("data-indice"), 10);
-                alternarOracaoAtendida(idx);
+                alternarStatusOracao(idx);
             });
         });
 
-        listaOracoes.querySelectorAll(".botao-editar").forEach(btn => {
+        listaOracoes.querySelectorAll(".btn-card-editar").forEach(btn => {
             btn.addEventListener("click", () => {
                 const idx = parseInt(btn.getAttribute("data-indice"), 10);
                 iniciarEdicaoOracao(idx);
             });
         });
 
-        listaOracoes.querySelectorAll(".botao-excluir").forEach(btn => {
+        listaOracoes.querySelectorAll(".btn-card-excluir").forEach(btn => {
             btn.addEventListener("click", () => {
                 const idx = parseInt(btn.getAttribute("data-indice"), 10);
-                excluirOracaoComConfirmacao(idx);
+                abrirModalConfirmacao(
+                    "Excluir Oração",
+                    "Deseja realmente remover esta oração do seu mural?",
+                    () => {
+                        if (indiceEdicaoOracao === idx) cancelarEdicaoOracao();
+                        oracoes.splice(idx, 1);
+                        salvarDados("oracoes", oracoes);
+                        renderizarOracoes();
+                        mostrarToast("Oração removida com sucesso.", "info");
+                    },
+                    "🗑️"
+                );
             });
         });
+    }
+
+    function alternarStatusOracao(indice) {
+        if (!oracoes[indice]) return;
+        oracoes[indice].atendida = !oracoes[indice].atendida;
+        salvarDados("oracoes", oracoes);
+        renderizarOracoes();
+
+        if (oracoes[indice].atendida) {
+            mostrarToast("Glória a Deus! Oração marcada como Graça Alcançada!", "sucesso", "🎉");
+        } else {
+            mostrarToast("Oração mantida com fé no altar.", "info", "🕯️");
+        }
     }
 
     function iniciarEdicaoOracao(indice) {
@@ -401,78 +786,158 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!item) return;
 
         indiceEdicaoOracao = indice;
-        campoPedidoOracao.value = item.texto;
+        if (campoPedidoOracao) campoPedidoOracao.value = item.texto;
+        if (selectCategoriaOracao) selectCategoriaOracao.value = item.categoria || "Espiritualidade";
 
-        botaoSalvarOracao.textContent = "Salvar alterações";
-        if (botaoCancelarEdicaoOracao) {
-            botaoCancelarEdicaoOracao.style.display = "inline-block";
-        }
+        if (tituloFormOracao) tituloFormOracao.textContent = "Editar Oração";
+        if (botaoSalvarOracao) botaoSalvarOracao.textContent = "Salvar alterações";
+        if (botaoCancelarEdicaoOracao) botaoCancelarEdicaoOracao.style.display = "inline-flex";
 
         campoPedidoOracao.focus();
         campoPedidoOracao.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
-    function alternarOracaoAtendida(indice) {
-        if (!oracoes[indice]) return;
-        oracoes[indice].atendida = !oracoes[indice].atendida;
-        salvarOracoesStorage();
-        renderizarOracoes();
-
-        const status = oracoes[indice].atendida ? "Oração marcada como graça alcançada! Glória a Deus." : "Status da oração atualizado.";
-        exibirFeedback("feedbackOracao", status, "sucesso");
-    }
-
-    function excluirOracaoComConfirmacao(indice) {
-        if (confirm("Deseja realmente excluir este pedido de oração?")) {
-            if (indiceEdicaoOracao === indice) {
-                limparFormularioOracao();
-            } else if (indiceEdicaoOracao > indice) {
-                indiceEdicaoOracao--;
-            }
-
-            oracoes.splice(indice, 1);
-            salvarOracoesStorage();
-            renderizarOracoes();
-            exibirFeedback("feedbackOracao", "Oração excluída com sucesso.", "sucesso");
-        }
+    function cancelarEdicaoOracao() {
+        indiceEdicaoOracao = null;
+        if (campoPedidoOracao) campoPedidoOracao.value = "";
+        if (tituloFormOracao) tituloFormOracao.textContent = "Apresentar Nova Oração";
+        if (botaoSalvarOracao) botaoSalvarOracao.textContent = "Colocar em oração";
+        if (botaoCancelarEdicaoOracao) botaoCancelarEdicaoOracao.style.display = "none";
     }
 
     if (botaoCancelarEdicaoOracao) {
-        botaoCancelarEdicaoOracao.addEventListener("click", () => {
-            limparFormularioOracao();
-            exibirFeedback("feedbackOracao", "Edição cancelada.", "sucesso");
-        });
+        botaoCancelarEdicaoOracao.addEventListener("click", cancelarEdicaoOracao);
     }
 
-    if (botaoSalvarOracao && campoPedidoOracao) {
+    if (botaoSalvarOracao) {
         botaoSalvarOracao.addEventListener("click", () => {
-            const texto = campoPedidoOracao.value.trim();
+            const texto = campoPedidoOracao ? campoPedidoOracao.value.trim() : "";
+            const categoria = selectCategoriaOracao ? selectCategoriaOracao.value : "Espiritualidade";
 
             if (!texto) {
-                exibirFeedback("feedbackOracao", "Por favor, escreva seu pedido de oração antes de salvar.", "erro");
+                mostrarToast("Por favor, escreva sua oração antes de salvar.", "erro");
                 return;
             }
 
             if (indiceEdicaoOracao !== null && oracoes[indiceEdicaoOracao]) {
                 oracoes[indiceEdicaoOracao].texto = texto;
-                exibirFeedback("feedbackOracao", "Oração atualizada com sucesso!", "sucesso");
+                oracoes[indiceEdicaoOracao].categoria = categoria;
+                mostrarToast("Oração atualizada com sucesso!", "sucesso", "🙏");
             } else {
                 const novaOracao = {
-                    texto: texto,
+                    texto,
+                    categoria,
                     atendida: false,
-                    data: obterDataFormatada()
+                    data: obterDataHoje()
                 };
                 oracoes.unshift(novaOracao);
-                exibirFeedback("feedbackOracao", "Oração registrada com sucesso! Deus ouve sua oração.", "sucesso");
+                mostrarToast("Sua oração foi colocada diante de Deus com fé!", "sucesso", "🙏");
             }
 
-            salvarOracoesStorage();
-            limparFormularioOracao();
+            salvarDados("oracoes", oracoes);
+            cancelarEdicaoOracao();
             renderizarOracoes();
         });
     }
 
-    // Inicialização da listagem
+
+    // =========================================================================
+    // 8. BACKUP & RESTAURAÇÃO DE DADOS (JSON EXPORT / IMPORT)
+    // =========================================================================
+    const btnExportarBackup = document.getElementById("btnExportarBackup");
+    const inputImportarBackup = document.getElementById("inputImportarBackup");
+
+    if (btnExportarBackup) {
+        btnExportarBackup.addEventListener("click", () => {
+            const dadosBackup = {
+                versao: "2026.1",
+                app: "Caminho com Cristo",
+                dataExportacao: new Date().toISOString(),
+                leiturasBiblicas: leituras,
+                oracoes: oracoes
+            };
+
+            const jsonStr = JSON.stringify(dadosBackup, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `caminho-com-cristo-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            mostrarToast("Backup exportado com sucesso para seu dispositivo!", "sucesso", "📥");
+        });
+    }
+
+    if (inputImportarBackup) {
+        inputImportarBackup.addEventListener("change", (e) => {
+            const arquivo = e.target.files[0];
+            if (!arquivo) return;
+
+            const leitor = new FileReader();
+            leitor.onload = (evento) => {
+                try {
+                    const dados = JSON.parse(evento.target.result);
+                    if (!dados.leiturasBiblicas && !dados.oracoes) {
+                        throw new Error("Arquivo de backup inválido.");
+                    }
+
+                    abrirModalConfirmacao(
+                        "Restaurar Backup",
+                        "Deseja importar este backup? Os dados existentes serão combinados com segurança.",
+                        () => {
+                            if (Array.isArray(dados.leiturasBiblicas)) {
+                                leituras = dados.leiturasBiblicas;
+                                salvarDados("leiturasBiblicas", leituras);
+                            }
+                            if (Array.isArray(dados.oracoes)) {
+                                oracoes = dados.oracoes;
+                                salvarDados("oracoes", oracoes);
+                            }
+
+                            renderizarLeituras();
+                            renderizarOracoes();
+                            mostrarToast("Backup restaurado com êxito!", "sucesso", "📤");
+                        },
+                        "📤"
+                    );
+                } catch (erro) {
+                    mostrarToast("Erro ao ler o arquivo de backup. Verifique o formato.", "erro");
+                }
+            };
+            leitor.readAsText(arquivo);
+            inputImportarBackup.value = "";
+        });
+    }
+
+
+    // =========================================================================
+    // 9. FUNÇÕES DE PERSISTÊNCIA LOCAL (LOCALSTORAGE SEGURO)
+    // =========================================================================
+    function carregarDados(chave) {
+        try {
+            const valor = localStorage.getItem(chave);
+            return valor ? JSON.parse(valor) : [];
+        } catch (e) {
+            console.warn(`Aviso ao ler ${chave} do localStorage:`, e);
+            return [];
+        }
+    }
+
+    function salvarDados(chave, dados) {
+        try {
+            localStorage.setItem(chave, JSON.stringify(dados));
+        } catch (e) {
+            console.error(`Erro ao salvar ${chave} no localStorage:`, e);
+            mostrarToast("Aviso: o armazenamento local pode estar restrito.", "erro");
+        }
+    }
+
+    // Inicialização da interface
     renderizarLeituras();
     renderizarOracoes();
-});
+
+});
+
