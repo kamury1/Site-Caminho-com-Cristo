@@ -1242,6 +1242,19 @@ section {
     font-size: 0.85rem;
 }
 
+.link-credito {
+    color: var(--dourado-primario);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transicao);
+}
+
+.link-credito:hover {
+    color: var(--dourado-luz);
+    text-decoration: underline;
+    text-shadow: 0 0 8px var(--dourado-glow);
+}
+
 /* ==========================================================================
    BOTÃO FLUTUANTE VOLTAR AO TOPO
    ========================================================================== */
