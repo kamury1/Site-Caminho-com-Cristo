@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Caminho com Cristo</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header id="inicio">
+
+        <nav>
+            <div class="logo">
+                ✝ Caminho com Cristo
+            </div>
+
+<div class="menu">
+    <a href="#inicio">Início</a>
+    <a href="#palavra">Palavra do Dia</a>
+    <a href="#biblia">Bíblia</a>
+    <a href="#oracoes">Orações</a>
+    <a href="#reflexoes">Reflexões</a>
+</div>
+        </nav>
+
+        <div class="hero">
+
+            <p class="hero-subtitulo">
+                FÉ • ESPERANÇA • AMOR
+            </p>
+
+            <h1>
+                Caminhando todos os dias<br>
+                <span>com Cristo.</span>
+            </h1>
+
+            <p class="hero-texto">
+                Um espaço para conhecer a Palavra,
+                fortalecer a fé e caminhar mais perto de Deus.
+            </p>
+
+            <button>
+                Começar minha caminhada
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- PALAVRA DO DIA -->
+
+<section class="palavra-do-dia" id="palavra">
+
+            <p class="secao-label">
+                PALAVRA DO DIA
+            </p>
+
+            <h2>
+                Encontre descanso em Cristo
+            </h2>
+
+            <blockquote>
+                “Vinde a mim, todos vós que estais cansados e carregados
+                de fardos, e eu vos darei descanso.”
+            </blockquote>
+
+            <p class="referencia">
+                Mateus 11,28
+            </p>
+
+            <div class="reflexao">
+
+                <h3>
+                    Uma reflexão para hoje
+                </h3>
+
+                <p>
+                    Há dias em que o peso parece maior do que conseguimos carregar.
+                    Cristo não nos pede que enfrentemos tudo sozinhos. Ele nos convida
+                    a nos aproximarmos Dele e encontrarmos descanso em sua presença.
+                </p>
+
+            </div>
+
+
+            <div class="reflexao-completa" id="reflexaoCompleta">
+
+                <p>
+                    Quando Jesus nos chama para perto Dele, isso não significa que todos
+                    os problemas desaparecem imediatamente. Significa que não precisamos
+                    carregar nossos fardos sozinhos.
+                </p>
+
+                <p>
+                    A fé também é aprender a descansar em Deus mesmo quando ainda não
+                    conseguimos enxergar a solução. Cristo permanece conosco durante
+                    o caminho.
+                </p>
+
+            </div>
+
+
+            <button class="botao-reflexao">
+                Ler reflexão →
+            </button>
+
+        </section>
+
+
+        <!-- MINHA CAMINHADA -->
+
+<section class="minha-caminhada" id="biblia">
+
+            <p class="secao-label">
+                MINHA CAMINHADA
+            </p>
+
+            <h2>
+                Registro de leitura bíblica
+            </h2>
+
+            <p class="descricao-caminhada">
+                Registre aquilo que você leu e o que mais tocou seu coração.
+            </p>
+
+
+            <div class="form-leitura">
+
+                <div class="campo">
+
+                    <label for="livro">
+                        Livro
+                    </label>
+
+                    <input
+                        type="text"
+                        id="livro"
+                        placeholder="Ex: João"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="capitulo">
+                        Capítulo
+                    </label>
+
+                    <input
+                        type="number"
+                        id="capitulo"
+                        placeholder="Ex: 3"
+                    >
+
+                </div>
+
+
+                <div class="campo campo-grande">
+
+                    <label for="aprendizado">
+                        O que aprendi?
+                    </label>
+
+                    <textarea
+                        id="aprendizado"
+                        rows="5"
+                        placeholder="Escreva sua reflexão sobre a leitura..."
+                    ></textarea>
+
+                </div>
+
+
+                <button id="salvarLeitura">
+                    Salvar leitura
+                </button>
+
+            </div>
+
+
+            <div class="leituras-salvas">
+
+                <h3>
+                    Minhas leituras
+                </h3>
+
+                <div id="listaLeituras">
+
+                    <p class="sem-leituras">
+                        Nenhuma leitura registrada ainda.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MINHAS ORAÇÕES -->
+
+<section class="minhas-oracoes" id="oracoes">  
+
+    <p class="secao-label">MINHAS ORAÇÕES</p>
+
+    <h2>🙏 Meu espaço de oração</h2>
+
+    <p class="descricao-oracoes">
+        Registre aquilo que você deseja colocar nas mãos de Deus.
+    </p>
+
+    <div class="form-oracao">
+
+        <label for="pedidoOracao">Minha oração</label>
+
+        <textarea
+            id="pedidoOracao"
+            rows="5"
+            placeholder="Escreva aqui seu pedido de oração..."
+        ></textarea>
+
+        <button id="salvarOracao">
+            Salvar oração
+        </button>
+
+    </div>
+
+    <div class="oracoes-salvas">
+
+        <h3>Minhas orações</h3>
+
+        <div id="listaOracoes">
+            <p class="sem-oracoes">
+                Nenhuma oração registrada ainda.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

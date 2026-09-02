@@ -1,0 +1,568 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0b0f14;
+    color: #f5f5f5;
+    min-height: 100vh;
+}
+
+header {
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            rgba(5, 7, 10, 0.55),
+            rgba(5, 7, 10, 0.92)
+        ),
+        url("imagens/jesus-hero.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+header h1 {
+    font-size: 42px;
+    margin-bottom: 12px;
+    color: #d8b56a;
+}
+
+header p {
+    color: #b8b8b8;
+    font-size: 18px;
+}
+
+main {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 0 80px;
+    display: grid;
+    gap: 24px;
+}
+
+section {
+    background: #121820;
+    border: 1px solid #242b34;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+section h2 {
+    color: #d8b56a;
+    margin-bottom: 16px;
+    font-size: 24px;
+}
+
+    section p {
+        line-height: 1.7;
+        color: #d6d6d6;
+        font-size: 16px;
+    }
+
+nav {
+    position: relative;
+z-index: 1000;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #d8b56a;
+}
+
+.menu {
+    display: flex;
+    gap: 28px;
+}
+
+.menu a {
+    color: #f2f2f2;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: #d8b56a;
+}
+
+.hero {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px 90px;
+}
+
+.hero-subtitulo {
+    color: #d8b56a;
+    letter-spacing: 4px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 58px;
+    line-height: 1.1;
+    max-width: 900px;
+    margin-bottom: 24px;
+    color: white;
+}
+
+.hero h1 span {
+    color: #d8b56a;
+}
+
+.hero-texto {
+    max-width: 650px;
+    font-size: 19px;
+    line-height: 1.7;
+    color: #b8b8b8;
+    margin-bottom: 32px;
+}
+
+.hero button {
+    background: #d8b56a;
+    color: #111;
+    border: none;
+    padding: 15px 28px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hero button:hover {
+    transform: translateY(-3px);
+}
+.palavra-do-dia {
+    background: #f3eee4;
+    color: #171717;
+    border: none;
+    border-radius: 24px;
+    padding: 70px 80px;
+    text-align: center;
+}
+
+.palavra-do-dia .secao-label {
+    color: #9a762f;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin-bottom: 18px;
+}
+
+.palavra-do-dia h2 {
+    color: #171717;
+    font-size: 38px;
+    margin-bottom: 35px;
+}
+
+.palavra-do-dia blockquote {
+    max-width: 800px;
+    margin: 0 auto 20px;
+
+    font-size: 28px;
+    line-height: 1.6;
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #292929;
+}
+
+.palavra-do-dia .referencia {
+    color: #9a762f;
+    font-weight: bold;
+    margin-bottom: 45px;
+}
+
+.reflexao {
+    max-width: 720px;
+    margin: 0 auto 30px;
+    padding-top: 30px;
+    border-top: 1px solid #d8cdb9;
+}
+
+.reflexao h3 {
+    color: #171717;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.reflexao p {
+    color: #555;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+.botao-reflexao {
+    background: transparent;
+    color: #8c6928;
+    border: 1px solid #b99248;
+    padding: 13px 24px;
+    border-radius: 999px;
+
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.botao-reflexao:hover {
+    background: #b99248;
+    color: white;
+}
+.reflexao-completa {
+    max-width: 720px;
+    margin: 0 auto 30px;
+    color: #555;
+    line-height: 1.8;
+
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    transition: max-height 0.6s ease, opacity 0.5s ease;
+}
+
+.reflexao-completa.aberta {
+    max-height: 400px;
+    opacity: 1;
+}
+.reflexao-completa p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.minha-caminhada {
+    padding: 36px;
+}
+
+.minha-caminhada .secao-label {
+    color: #d8b56a;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+.minha-caminhada h2 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.descricao-caminhada {
+    color: #aeb5bd;
+    margin-bottom: 30px;
+}
+
+.form-leitura {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-grande {
+    grid-column: 1 / -1;
+}
+
+.campo label {
+    color: #f5f5f5;
+    font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+    width: 100%;
+    background: #0b0f14;
+    color: #f5f5f5;
+
+    border: 1px solid #303945;
+    border-radius: 10px;
+
+    padding: 14px;
+    font-size: 16px;
+    font-family: inherit;
+
+    outline: none;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    border-color: #d8b56a;
+}
+
+.campo textarea {
+    resize: vertical;
+}
+
+#salvarLeitura {
+    grid-column: 1 / -1;
+
+    background: #d8b56a;
+    color: #111;
+
+    border: none;
+    border-radius: 999px;
+
+    padding: 14px 25px;
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.leituras-salvas {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #303945;
+}
+
+.leituras-salvas h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.sem-leituras {
+    color: #8f969e;
+}
+
+.leitura-registrada {
+    background: #0b0f14;
+    border: 1px solid #303945;
+    border-left: 4px solid #d8b56a;
+    border-radius: 12px;
+
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.leitura-registrada h4 {
+    color: #d8b56a;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.leitura-registrada p {
+    color: #c7cbd0;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+.botao-editar,
+.botao-excluir {
+    border: none;
+    border-radius: 8px;
+
+    padding: 9px 16px;
+    margin-right: 8px;
+
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.botao-editar {
+    background: #d8b56a;
+    color: #111;
+}
+
+.botao-excluir {
+    background: #242b34;
+    color: #e5e5e5;
+}
+
+.botao-editar:hover,
+.botao-excluir:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   MINHAS ORAÇÕES
+========================= */
+
+.minhas-oracoes {
+    padding: 48px;
+}
+
+.descricao-oracoes {
+    margin-top: 12px;
+    margin-bottom: 35px;
+    color: #c7cbd1;
+    font-size: 18px;
+}
+
+.form-oracao {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-oracao label {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.form-oracao textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 18px;
+
+    background: #090e14;
+    color: #ffffff;
+
+    border: 1px solid #303846;
+    border-radius: 14px;
+
+    font-size: 16px;
+    font-family: inherit;
+
+    resize: vertical;
+    outline: none;
+}
+
+.form-oracao textarea:focus {
+    border-color: #d8b56a;
+}
+
+.form-oracao textarea::placeholder {
+    color: #777d87;
+}
+
+#salvarOracao {
+    width: 100%;
+    margin-top: 12px;
+    padding: 17px;
+
+    background: #dfbb68;
+    color: #080b0f;
+
+    border: none;
+    border-radius: 30px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#salvarOracao:hover {
+    filter: brightness(1.08);
+}
+
+.oracoes-salvas {
+    margin-top: 45px;
+    padding-top: 30px;
+
+    border-top: 1px solid #29313c;
+}
+
+.oracoes-salvas h3 {
+    color: #ffffff;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.sem-oracoes {
+    color: #9da3ac;
+}
+
+/* ORAÇÕES REGISTRADAS */
+
+.oracao-registrada {
+    background: #090e14;
+    border: 1px solid #303846;
+    border-left: 4px solid #dfbb68;
+    border-radius: 14px;
+
+    padding: 22px;
+    margin-bottom: 16px;
+}
+
+.oracao-registrada p {
+    color: #e5e7eb;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.oracao-registrada button {
+    padding: 11px 18px;
+    margin-right: 10px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.oracao-registrada button:first-of-type {
+    background: #dfbb68;
+    color: #090e14;
+}
+
+.oracao-registrada button:last-of-type {
+    background: #242c38;
+    color: #ffffff;
+}
+
+.oracao-registrada button:hover {
+    filter: brightness(1.12);
+}
+
+/* ORAÇÃO ATENDIDA */
+
+.oracao-registrada.oracao-atendida {
+    border-left-color: #63b37a;
+    background: #0c1712;
+}
+
+.oracao-registrada.oracao-atendida p {
+    color: #b9d8c2;
+}
+
+.oracao-registrada.oracao-atendida::before {
+    content: "✓ ORAÇÃO ATENDIDA";
+    display: block;
+
+    margin-bottom: 14px;
+
+    color: #63b37a;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
