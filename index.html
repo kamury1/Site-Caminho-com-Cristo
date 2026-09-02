@@ -305,8 +305,15 @@
                             <button type="button" class="btn-tab-testamento" data-testamento="Novo Testamento" role="tab" aria-selected="false">Novo Testamento (27)</button>
                         </div>
 
-                        <!-- FERRAMENTAS DE LEITURA (TAMANHO DE FONTE, ÁUDIO, CÓPIA) -->
+                        <!-- FERRAMENTAS DE LEITURA (TEMA, TAMANHO DE FONTE, ÁUDIO, CÓPIA) -->
                         <div class="leitor-ferramentas-texto">
+                            <!-- SELETOR DE TEMA DE LEITURA -->
+                            <div class="grupo-tema-leitura" role="group" aria-label="Tema de leitura da Bíblia">
+                                <button type="button" class="btn-tema-leitura ativo" data-tema="pergaminho" title="Modo Pergaminho Claro (Alta legibilidade)" aria-pressed="true">📜 Claro</button>
+                                <button type="button" class="btn-tema-leitura" data-tema="escuro" title="Modo Noturno (Alto contraste)" aria-pressed="false">🌙 Escuro</button>
+                                <button type="button" class="btn-tema-leitura" data-tema="sepia" title="Modo Sépia (Conforto visual)" aria-pressed="false">🏺 Sépia</button>
+                            </div>
+
                             <div class="grupo-ajuste-fonte" title="Ajustar tamanho da letra">
                                 <button type="button" class="btn-ferramenta-fonte" id="btnDiminuirFonte" aria-label="Diminuir tamanho da letra">A-</button>
                                 <span class="indicador-tamanho-fonte" id="indicadorTamanhoFonte">100%</span>
@@ -369,8 +376,8 @@
 
                 </div>
 
-                <!-- CORPO DA LEITURA (VERSÍCULOS) -->
-                <div class="leitor-texto-container" id="leitorTextoContainer">
+                <!-- CORPO DA LEITURA (VERSÍCULOS COM MÁXIMA LEGIBILIDADE) -->
+                <div class="leitor-texto-container tema-pergaminho" id="leitorTextoContainer">
                     
                     <div class="leitor-cabecalho-leitura">
                         <div>

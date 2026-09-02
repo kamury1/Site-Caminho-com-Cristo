@@ -659,6 +659,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnOuvirCapitulo = document.getElementById("btnOuvirCapitulo");
     const btnCopiarCapitulo = document.getElementById("btnCopiarCapitulo");
     const botoesTabTestamento = document.querySelectorAll(".btn-tab-testamento");
+    const botoesTemaLeitura = document.querySelectorAll(".btn-tema-leitura");
+    const leitorTextoContainer = document.getElementById("leitorTextoContainer");
     const pillsBibliaRapida = document.querySelectorAll(".pill-biblia-rapida");
 
     let catalogoLivrosCatolicos = [];
@@ -668,6 +670,37 @@ document.addEventListener("DOMContentLoaded", () => {
     let filtroTestamentoBiblia = "todos";
     let vozCapituloTocando = false;
     let tamanhoFonteBibliaPercent = parseInt(localStorage.getItem("bibliaTamanhoFonte") || "100", 10);
+    let temaLeituraAtual = localStorage.getItem("bibliaTemaLeitura") || "pergaminho";
+
+    // GERENCIAMENTO DE TEMA DE LEITURA (CLARO PERGAMINHO, ESCURO, SÉPIA)
+    function aplicarTemaLeitura(tema) {
+        temaLeituraAtual = tema;
+        try {
+            localStorage.setItem("bibliaTemaLeitura", tema);
+        } catch (e) {}
+
+        if (leitorTextoContainer) {
+            leitorTextoContainer.classList.remove("tema-pergaminho", "tema-escuro", "tema-sepia");
+            leitorTextoContainer.classList.add(`tema-${tema}`);
+        }
+
+        botoesTemaLeitura.forEach(btn => {
+            const ativo = btn.getAttribute("data-tema") === tema;
+            btn.classList.toggle("ativo", ativo);
+            btn.setAttribute("aria-pressed", String(ativo));
+        });
+    }
+
+    botoesTemaLeitura.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const tema = btn.getAttribute("data-tema");
+            aplicarTemaLeitura(tema);
+            const nomes = { pergaminho: "Pergaminho Claro", escuro: "Noturno Alto Contraste", sepia: "Sépia Confortável" };
+            mostrarToast(`Tema alterado para ${nomes[tema] || tema}.`, "info", "🎨");
+        });
+    });
+
+    aplicarTemaLeitura(temaLeituraAtual);
 
     function aplicarTamanhoFonteBiblia(percent) {
         tamanhoFonteBibliaPercent = Math.max(80, Math.min(145, percent));
