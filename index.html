@@ -4,28 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Caminho com Cristo - Um espaço diário de fé, oração, leitura bíblica e reflexões para fortalecer sua caminhada com Deus.">
+    <meta name="keywords" content="Caminho com Cristo, devocional diário, Bíblia, orações, Palavra do Dia, reflexão cristã, diário espiritual">
+    <meta name="author" content="Caminho com Cristo">
+    <meta name="theme-color" content="#0b0f14">
 
-    <title>Caminho com Cristo</title>
+    <!-- Open Graph / Redes Sociais -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Caminho com Cristo — Fé, Palavra e Oração">
+    <meta property="og:description" content="Fortaleça sua fé diariamente com a Palavra do Dia, devocionais, registro de leituras bíblicas e orações.">
+    <meta property="og:image" content="imagens/jesus-hero.jpg">
+    <meta property="og:locale" content="pt_BR">
+
+    <title>Caminho com Cristo — Fé, Esperança e Amor</title>
+
+    <!-- Favicon SVG Cristão -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230b0f14' stroke='%23d8b56a' stroke-width='4'/><path d='M50 16 v68 M28 38 h44' stroke='%23d8b56a' stroke-width='8' stroke-linecap='round'/></svg>">
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header id="inicio">
+    <!-- CABEÇALHO E HERO -->
+    <header id="inicio">
 
-        <nav>
-            <div class="logo">
+        <nav aria-label="Navegação principal">
+            <a href="#inicio" class="logo" aria-label="Caminho com Cristo - Início">
                 ✝ Caminho com Cristo
-            </div>
+            </a>
 
-<div class="menu">
-    <a href="#inicio">Início</a>
-    <a href="#palavra">Palavra do Dia</a>
-    <a href="#biblia">Bíblia</a>
-    <a href="#oracoes">Orações</a>
-    <a href="#reflexoes">Reflexões</a>
-</div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Alternar menu de navegação" aria-expanded="false" aria-controls="navMenu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <div class="menu" id="navMenu" role="menu">
+                <a href="#inicio" role="menuitem">Início</a>
+                <a href="#palavra" role="menuitem">Palavra do Dia</a>
+                <a href="#reflexoes" role="menuitem">Reflexões</a>
+                <a href="#biblia" role="menuitem">Bíblia</a>
+                <a href="#oracoes" role="menuitem">Orações</a>
+            </div>
         </nav>
 
         <div class="hero">
@@ -44,7 +65,7 @@
                 fortalecer a fé e caminhar mais perto de Deus.
             </p>
 
-            <button>
+            <button class="hero-btn" id="btnComecarCaminhada" type="button">
                 Começar minha caminhada
             </button>
 
@@ -52,18 +73,16 @@
 
     </header>
 
-
-    <main>
+    <main id="conteudo-principal">
 
         <!-- PALAVRA DO DIA -->
-
-<section class="palavra-do-dia" id="palavra">
+        <section class="palavra-do-dia" id="palavra" aria-labelledby="titulo-palavra">
 
             <p class="secao-label">
                 PALAVRA DO DIA
             </p>
 
-            <h2>
+            <h2 id="titulo-palavra">
                 Encontre descanso em Cristo
             </h2>
 
@@ -76,7 +95,7 @@
                 Mateus 11,28
             </p>
 
-            <div class="reflexao">
+            <div class="reflexao" id="reflexoes">
 
                 <h3>
                     Uma reflexão para hoje
@@ -90,8 +109,7 @@
 
             </div>
 
-
-            <div class="reflexao-completa" id="reflexaoCompleta">
+            <div class="reflexao-completa" id="reflexaoCompleta" aria-hidden="true">
 
                 <p>
                     Quando Jesus nos chama para perto Dele, isso não significa que todos
@@ -107,97 +125,85 @@
 
             </div>
 
-
-            <button class="botao-reflexao">
+            <button class="botao-reflexao" id="btnToggleReflexao" type="button" aria-expanded="false" aria-controls="reflexaoCompleta">
                 Ler reflexão →
             </button>
 
         </section>
 
 
-        <!-- MINHA CAMINHADA -->
-
-<section class="minha-caminhada" id="biblia">
+        <!-- MINHA CAMINHADA (REGISTRO BÍBLICO) -->
+        <section class="minha-caminhada" id="biblia" aria-labelledby="titulo-caminhada">
 
             <p class="secao-label">
                 MINHA CAMINHADA
             </p>
 
-            <h2>
-                Registro de leitura bíblica
+            <h2 id="titulo-caminhada">
+                📖 Registro de leitura bíblica
             </h2>
 
             <p class="descricao-caminhada">
                 Registre aquilo que você leu e o que mais tocou seu coração.
             </p>
 
-
-            <div class="form-leitura">
+            <form class="form-leitura" id="formLeitura" onsubmit="return false;">
 
                 <div class="campo">
-
-                    <label for="livro">
-                        Livro
-                    </label>
-
+                    <label for="livro">Livro</label>
                     <input
                         type="text"
                         id="livro"
                         placeholder="Ex: João"
+                        autocomplete="off"
+                        required
                     >
-
                 </div>
 
-
                 <div class="campo">
-
-                    <label for="capitulo">
-                        Capítulo
-                    </label>
-
+                    <label for="capitulo">Capítulo</label>
                     <input
                         type="number"
                         id="capitulo"
                         placeholder="Ex: 3"
+                        min="1"
+                        required
                     >
-
                 </div>
 
-
                 <div class="campo campo-grande">
-
-                    <label for="aprendizado">
-                        O que aprendi?
-                    </label>
-
+                    <label for="aprendizado">O que aprendi?</label>
                     <textarea
                         id="aprendizado"
                         rows="5"
                         placeholder="Escreva sua reflexão sobre a leitura..."
+                        required
                     ></textarea>
-
                 </div>
 
+                <div class="acoes-formulario">
+                    <button type="button" id="salvarLeitura" class="btn-primario">
+                        Salvar leitura
+                    </button>
+                    <button type="button" id="cancelarEdicaoLeitura" class="btn-cancelar" style="display: none;">
+                        Cancelar edição
+                    </button>
+                </div>
 
-                <button id="salvarLeitura">
-                    Salvar leitura
-                </button>
+                <div id="feedbackLeitura" class="feedback-msg" role="status" aria-live="polite"></div>
 
-            </div>
-
+            </form>
 
             <div class="leituras-salvas">
 
                 <h3>
-                    Minhas leituras
+                    Minhas leituras salvas
                 </h3>
 
-                <div id="listaLeituras">
-
+                <div id="listaLeituras" class="lista-cards" aria-live="polite">
                     <p class="sem-leituras">
                         Nenhuma leitura registrada ainda.
                     </p>
-
                 </div>
 
             </div>
@@ -206,49 +212,89 @@
 
 
         <!-- MINHAS ORAÇÕES -->
+        <section class="minhas-oracoes" id="oracoes" aria-labelledby="titulo-oracoes">
 
-<section class="minhas-oracoes" id="oracoes">  
-
-    <p class="secao-label">MINHAS ORAÇÕES</p>
-
-    <h2>🙏 Meu espaço de oração</h2>
-
-    <p class="descricao-oracoes">
-        Registre aquilo que você deseja colocar nas mãos de Deus.
-    </p>
-
-    <div class="form-oracao">
-
-        <label for="pedidoOracao">Minha oração</label>
-
-        <textarea
-            id="pedidoOracao"
-            rows="5"
-            placeholder="Escreva aqui seu pedido de oração..."
-        ></textarea>
-
-        <button id="salvarOracao">
-            Salvar oração
-        </button>
-
-    </div>
-
-    <div class="oracoes-salvas">
-
-        <h3>Minhas orações</h3>
-
-        <div id="listaOracoes">
-            <p class="sem-oracoes">
-                Nenhuma oração registrada ainda.
+            <p class="secao-label">
+                MINHAS ORAÇÕES
             </p>
-        </div>
 
-    </div>
+            <h2 id="titulo-oracoes">
+                🙏 Meu espaço de oração
+            </h2>
 
-</section>
+            <p class="descricao-oracoes">
+                Registre aquilo que você deseja colocar nas mãos de Deus e acompanhe suas graças alcançadas.
+            </p>
+
+            <form class="form-oracao" id="formOracao" onsubmit="return false;">
+
+                <label for="pedidoOracao">Minha oração ou pedido</label>
+
+                <textarea
+                    id="pedidoOracao"
+                    rows="5"
+                    placeholder="Escreva aqui sua oração, agradecimento ou pedido a Deus..."
+                    required
+                ></textarea>
+
+                <div class="acoes-formulario">
+                    <button type="button" id="salvarOracao" class="btn-primario">
+                        Salvar oração
+                    </button>
+                    <button type="button" id="cancelarEdicaoOracao" class="btn-cancelar" style="display: none;">
+                        Cancelar edição
+                    </button>
+                </div>
+
+                <div id="feedbackOracao" class="feedback-msg" role="status" aria-live="polite"></div>
+
+            </form>
+
+            <div class="oracoes-salvas">
+
+                <h3>
+                    Minhas orações registradas
+                </h3>
+
+                <div id="listaOracoes" class="lista-cards" aria-live="polite">
+                    <p class="sem-oracoes">
+                        Nenhuma oração registrada ainda.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
 
     </main>
 
+    <!-- RODAPÉ -->
+    <footer class="rodape">
+        <div class="rodape-conteudo">
+            <div class="rodape-logo">
+                ✝ Caminho com Cristo
+            </div>
+            <p class="rodape-versiculo">
+                “Lâmpada para os meus pés é tua palavra e luz, para o meu caminho.”
+                <span>— Salmos 119:105</span>
+            </p>
+            <div class="rodape-links">
+                <a href="#inicio">Início</a>
+                <a href="#palavra">Palavra do Dia</a>
+                <a href="#reflexoes">Reflexões</a>
+                <a href="#biblia">Bíblia</a>
+                <a href="#oracoes">Orações</a>
+            </div>
+            <p class="rodape-copia">
+                © Caminho com Cristo — Feito com fé, amor e devoção.
+            </p>
+        </div>
+    </footer>
+
+    <!-- BOTÃO VOLTAR AO TOPO -->
+    <button id="btnVoltarTopo" class="btn-voltar-topo" aria-label="Voltar ao topo da página" type="button">
+        ↑
+    </button>
 
     <script src="script.js"></script>
 
