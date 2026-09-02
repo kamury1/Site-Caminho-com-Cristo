@@ -55,6 +55,7 @@
                 <a href="#inicio" class="nav-link ativo" role="menuitem">Início</a>
                 <a href="#palavra" class="nav-link" role="menuitem">Palavra do Dia</a>
                 <a href="#meditacao" class="nav-link" role="menuitem">Momento de Oração</a>
+                <a href="#leitor-biblia" class="nav-link" role="menuitem">Bíblia Sagrada</a>
                 <a href="#biblia" class="nav-link" role="menuitem">Diário Bíblico</a>
                 <a href="#oracoes" class="nav-link" role="menuitem">Minhas Orações</a>
             </div>
@@ -273,9 +274,143 @@
 
         </section>
 
+        <!-- ===================================================================
+             3. SEÇÃO: BÍBLIA SAGRADA CATÓLICA (LEITOR AVE MARIA • 73 LIVROS)
+             =================================================================== -->
+        <section class="secao-leitor-biblia" id="leitor-biblia" aria-labelledby="titulo-leitor-biblia">
+            
+            <div class="secao-cabecalho-centro">
+                <div class="secao-tag">
+                    <span class="secao-tag-icone">✝</span>
+                    <span>EDIÇÃO CATÓLICA AVE MARIA • 73 LIVROS</span>
+                </div>
+                <h2 id="titulo-leitor-biblia" class="secao-titulo">
+                    Bíblia Sagrada
+                </h2>
+                <p class="secao-subtitulo">
+                    Mergulhe nas Escrituras Sagradas. Leia, medite nos ensinamentos de Deus e alimente a sua fé diária.
+                </p>
+            </div>
+
+            <div class="card-leitor-biblia">
+                
+                <!-- PAINEL DE CONTROLES E SELEÇÃO -->
+                <div class="leitor-barra-controle">
+                    
+                    <div class="leitor-filtros-topo">
+                        <!-- FILTRO TESTAMENTO -->
+                        <div class="botoes-testamento" role="tablist" aria-label="Filtrar por Testamento">
+                            <button type="button" class="btn-tab-testamento ativo" data-testamento="todos" role="tab" aria-selected="true">Todos (73)</button>
+                            <button type="button" class="btn-tab-testamento" data-testamento="Antigo Testamento" role="tab" aria-selected="false">Antigo Testamento (46)</button>
+                            <button type="button" class="btn-tab-testamento" data-testamento="Novo Testamento" role="tab" aria-selected="false">Novo Testamento (27)</button>
+                        </div>
+
+                        <!-- FERRAMENTAS DE LEITURA (TAMANHO DE FONTE, ÁUDIO, CÓPIA) -->
+                        <div class="leitor-ferramentas-texto">
+                            <div class="grupo-ajuste-fonte" title="Ajustar tamanho da letra">
+                                <button type="button" class="btn-ferramenta-fonte" id="btnDiminuirFonte" aria-label="Diminuir tamanho da letra">A-</button>
+                                <span class="indicador-tamanho-fonte" id="indicadorTamanhoFonte">100%</span>
+                                <button type="button" class="btn-ferramenta-fonte" id="btnAumentarFonte" aria-label="Aumentar tamanho da letra">A+</button>
+                            </div>
+                            <button type="button" class="btn-icone-acao btn-ouvir-capitulo" id="btnOuvirCapitulo" title="Ouvir este capítulo em voz alta" aria-label="Ouvir capítulo bíblico">
+                                <span class="icone-btn-leitor">🔊</span>
+                                <span class="btn-texto-curto">Ouvir Capítulo</span>
+                            </button>
+                            <button type="button" class="btn-icone-acao btn-copiar-capitulo" id="btnCopiarCapitulo" title="Copiar este capítulo" aria-label="Copiar capítulo bíblico">
+                                <span class="icone-btn-leitor">📋</span>
+                                <span class="btn-texto-curto">Copiar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ATALHOS RÁPIDOS DE LEITURAS FREQUENTES -->
+                    <div class="leitor-atalhos-pills">
+                        <span class="atalhos-biblia-label">Passagens frequentes:</span>
+                        <div class="pills-biblia-container">
+                            <button type="button" class="pill-biblia-rapida" data-slug="salmos" data-cap="23">Salmo 23</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="salmos" data-cap="91">Salmo 91</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="sao-mateus" data-cap="5">Sermão da Montanha</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="sao-joao" data-cap="1">São João 1</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="sao-lucas" data-cap="1">Anunciação (Lucas 1)</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="sabedoria" data-cap="3">Sabedoria 3</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="romanos" data-cap="8">Romanos 8</button>
+                            <button type="button" class="pill-biblia-rapida" data-slug="1-corintios" data-cap="13">Hino ao Amor (1 Cor 13)</button>
+                        </div>
+                    </div>
+
+                    <!-- SELETORES DROPDOWN DE LIVRO E CAPÍTULO -->
+                    <div class="leitor-seletores-grid">
+                        
+                        <div class="seletor-grupo">
+                            <label for="selectLivroBiblia">Livro Bíblico:</label>
+                            <div class="select-wrapper-custom">
+                                <select id="selectLivroBiblia" class="select-biblia" aria-label="Selecione o Livro Bíblico">
+                                    <option value="" disabled>Carregando livros...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="seletor-grupo seletor-capitulo-grupo">
+                            <label for="selectCapituloBiblia">Capítulo:</label>
+                            <div class="select-wrapper-custom">
+                                <select id="selectCapituloBiblia" class="select-biblia select-capitulo" aria-label="Selecione o Capítulo">
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- BUSCA RÁPIDA DE LIVRO -->
+                        <div class="seletor-grupo seletor-busca-livro">
+                            <label for="inputBuscaLivro">Filtrar Livro:</label>
+                            <input type="text" id="inputBuscaLivro" class="input-busca-livro" placeholder="Digite para filtrar (ex: Sabedoria)..." autocomplete="off">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CORPO DA LEITURA (VERSÍCULOS) -->
+                <div class="leitor-texto-container" id="leitorTextoContainer">
+                    
+                    <div class="leitor-cabecalho-leitura">
+                        <div>
+                            <h3 class="leitor-titulo-livro" id="leitorTituloCapitulo">
+                                Salmos — Capítulo 23
+                            </h3>
+                            <span class="leitor-subinfo-testamento" id="leitorTestamentoInfo">
+                                Antigo Testamento • Tradução Católica Ave Maria
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- LISTA DE VERSÍCULOS DINÂMICOS -->
+                    <div class="leitor-versiculos-lista" id="leitorVersiculosLista">
+                        <div class="leitor-carregando">
+                            <span class="carregando-icone">✝</span>
+                            <p>Carregando as Sagradas Escrituras...</p>
+                        </div>
+                    </div>
+
+                    <!-- NAVEGAÇÃO RÁPIDA INFERIOR -->
+                    <div class="leitor-navegacao-capitulos">
+                        <button type="button" class="btn-nav-capitulo" id="btnCapituloAnterior" title="Capítulo Anterior">
+                            ← Anterior
+                        </button>
+                        <span class="leitor-indicador-centro" id="leitorIndicadorCentro">Capítulo 23 de 150</span>
+                        <button type="button" class="btn-nav-capitulo" id="btnCapituloProximo" title="Próximo Capítulo">
+                            Próximo →
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
 
         <!-- ===================================================================
-             3. SEÇÃO: DIÁRIO DE LEITURA BÍBLICA (MINHA CAMINHADA)
+             4. SEÇÃO: DIÁRIO DE LEITURA BÍBLICA (MINHA CAMINHADA)
              =================================================================== -->
         <section class="secao-biblia" id="biblia" aria-labelledby="titulo-biblia">
             
@@ -523,6 +658,7 @@
                     <a href="#inicio">Início</a>
                     <a href="#palavra">Palavra do Dia</a>
                     <a href="#meditacao">Momento de Oração</a>
+                    <a href="#leitor-biblia">Bíblia Sagrada</a>
                     <a href="#biblia">Diário Bíblico</a>
                     <a href="#oracoes">Minhas Orações</a>
                 </div>

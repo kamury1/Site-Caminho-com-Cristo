@@ -1,0 +1,440 @@
+[
+  {
+    "id": "genesis",
+    "nome": "Gênesis",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 50
+  },
+  {
+    "id": "exodo",
+    "nome": "Êxodo",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 40
+  },
+  {
+    "id": "levitico",
+    "nome": "Levítico",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 27
+  },
+  {
+    "id": "numeros",
+    "nome": "Números",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 36
+  },
+  {
+    "id": "deuteronomio",
+    "nome": "Deuteronômio",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 34
+  },
+  {
+    "id": "josue",
+    "nome": "Josué",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 24
+  },
+  {
+    "id": "juizes",
+    "nome": "Juízes",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 21
+  },
+  {
+    "id": "rute",
+    "nome": "Rute",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 4
+  },
+  {
+    "id": "i-samuel",
+    "nome": "I Samuel",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 31
+  },
+  {
+    "id": "ii-samuel",
+    "nome": "II Samuel",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 24
+  },
+  {
+    "id": "i-reis",
+    "nome": "I Reis",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 22
+  },
+  {
+    "id": "ii-reis",
+    "nome": "II Reis",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 25
+  },
+  {
+    "id": "i-cronicas",
+    "nome": "I Crônicas",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 29
+  },
+  {
+    "id": "ii-cronicas",
+    "nome": "II Crônicas",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 36
+  },
+  {
+    "id": "esdras",
+    "nome": "Esdras",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 10
+  },
+  {
+    "id": "neemias",
+    "nome": "Neemias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 13
+  },
+  {
+    "id": "tobias",
+    "nome": "Tobias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 14
+  },
+  {
+    "id": "judite",
+    "nome": "Judite",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 16
+  },
+  {
+    "id": "ester",
+    "nome": "Ester",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 16
+  },
+  {
+    "id": "jo",
+    "nome": "Jó",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 42
+  },
+  {
+    "id": "salmos",
+    "nome": "Salmos",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 150
+  },
+  {
+    "id": "i-macabeus",
+    "nome": "I Macabeus",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 16
+  },
+  {
+    "id": "ii-macabeus",
+    "nome": "II Macabeus",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 15
+  },
+  {
+    "id": "proverbios",
+    "nome": "Provérbios",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 31
+  },
+  {
+    "id": "eclesiastes",
+    "nome": "Eclesiastes",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 12
+  },
+  {
+    "id": "cantico-dos-canticos",
+    "nome": "Cântico dos Cânticos",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 8
+  },
+  {
+    "id": "sabedoria",
+    "nome": "Sabedoria",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 19
+  },
+  {
+    "id": "eclesiastico",
+    "nome": "Eclesiástico",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 51
+  },
+  {
+    "id": "isaias",
+    "nome": "Isaías",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 66
+  },
+  {
+    "id": "jeremias",
+    "nome": "Jeremias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 52
+  },
+  {
+    "id": "lamentacoes",
+    "nome": "Lamentações",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 5
+  },
+  {
+    "id": "baruc",
+    "nome": "Baruc",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 6
+  },
+  {
+    "id": "ezequiel",
+    "nome": "Ezequiel",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 48
+  },
+  {
+    "id": "daniel",
+    "nome": "Daniel",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 14
+  },
+  {
+    "id": "oseias",
+    "nome": "Oséias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 14
+  },
+  {
+    "id": "joel",
+    "nome": "Joel",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 4
+  },
+  {
+    "id": "amos",
+    "nome": "Amós",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 9
+  },
+  {
+    "id": "abdias",
+    "nome": "Abdias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 1
+  },
+  {
+    "id": "jonas",
+    "nome": "Jonas",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 4
+  },
+  {
+    "id": "miqueias",
+    "nome": "Miquéias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 7
+  },
+  {
+    "id": "naum",
+    "nome": "Naum",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "habacuc",
+    "nome": "Habacuc",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "sofonias",
+    "nome": "Sofonias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "ageu",
+    "nome": "Ageu",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 2
+  },
+  {
+    "id": "zacarias",
+    "nome": "Zacarias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 14
+  },
+  {
+    "id": "malaquias",
+    "nome": "Malaquias",
+    "testamento": "Antigo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "sao-mateus",
+    "nome": "São Mateus",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 28
+  },
+  {
+    "id": "sao-marcos",
+    "nome": "São Marcos",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 16
+  },
+  {
+    "id": "sao-lucas",
+    "nome": "São Lucas",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 24
+  },
+  {
+    "id": "sao-joao",
+    "nome": "São João",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 21
+  },
+  {
+    "id": "atos-dos-apostolos",
+    "nome": "Atos dos Apóstolos",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 28
+  },
+  {
+    "id": "romanos",
+    "nome": "Romanos",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 16
+  },
+  {
+    "id": "i-corintios",
+    "nome": "I Coríntios",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 16
+  },
+  {
+    "id": "ii-corintios",
+    "nome": "II Coríntios",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 13
+  },
+  {
+    "id": "galatas",
+    "nome": "Gálatas",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 6
+  },
+  {
+    "id": "efesios",
+    "nome": "Efésios",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 6
+  },
+  {
+    "id": "filipenses",
+    "nome": "Filipenses",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 4
+  },
+  {
+    "id": "colossenses",
+    "nome": "Colossenses",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 4
+  },
+  {
+    "id": "i-tessalonicenses",
+    "nome": "I Tessalonicenses",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 5
+  },
+  {
+    "id": "ii-tessalonicenses",
+    "nome": "II Tessalonicenses",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "i-timoteo",
+    "nome": "I Timóteo",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 6
+  },
+  {
+    "id": "ii-timoteo",
+    "nome": "II Timóteo",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 4
+  },
+  {
+    "id": "tito",
+    "nome": "Tito",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "filemon",
+    "nome": "Filêmon",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 1
+  },
+  {
+    "id": "hebreus",
+    "nome": "Hebreus",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 13
+  },
+  {
+    "id": "sao-tiago",
+    "nome": "São Tiago",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 5
+  },
+  {
+    "id": "i-sao-pedro",
+    "nome": "I São Pedro",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 5
+  },
+  {
+    "id": "ii-sao-pedro",
+    "nome": "II São Pedro",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 3
+  },
+  {
+    "id": "i-sao-joao",
+    "nome": "I São João",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 5
+  },
+  {
+    "id": "ii-sao-joao",
+    "nome": "II São João",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 1
+  },
+  {
+    "id": "iii-sao-joao",
+    "nome": "III São João",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 1
+  },
+  {
+    "id": "sao-judas",
+    "nome": "São Judas",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 1
+  },
+  {
+    "id": "apocalipse",
+    "nome": "Apocalipse",
+    "testamento": "Novo Testamento",
+    "totalCapitulos": 22
+  }
+]

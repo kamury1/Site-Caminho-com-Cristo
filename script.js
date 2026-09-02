@@ -642,7 +642,423 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =========================================================================
-    // 6. DIÁRIO DE LEITURA BÍBLICA (MINHA CAMINHADA)
+    // 6. BÍBLIA SAGRADA CATÓLICA (LEITOR AVE MARIA • 73 LIVROS)
+    // =========================================================================
+    const selectLivroBiblia = document.getElementById("selectLivroBiblia");
+    const selectCapituloBiblia = document.getElementById("selectCapituloBiblia");
+    const inputBuscaLivro = document.getElementById("inputBuscaLivro");
+    const leitorTituloCapitulo = document.getElementById("leitorTituloCapitulo");
+    const leitorTestamentoInfo = document.getElementById("leitorTestamentoInfo");
+    const leitorVersiculosLista = document.getElementById("leitorVersiculosLista");
+    const leitorIndicadorCentro = document.getElementById("leitorIndicadorCentro");
+    const btnCapituloAnterior = document.getElementById("btnCapituloAnterior");
+    const btnCapituloProximo = document.getElementById("btnCapituloProximo");
+    const btnAumentarFonte = document.getElementById("btnAumentarFonte");
+    const btnDiminuirFonte = document.getElementById("btnDiminuirFonte");
+    const indicadorTamanhoFonte = document.getElementById("indicadorTamanhoFonte");
+    const btnOuvirCapitulo = document.getElementById("btnOuvirCapitulo");
+    const btnCopiarCapitulo = document.getElementById("btnCopiarCapitulo");
+    const botoesTabTestamento = document.querySelectorAll(".btn-tab-testamento");
+    const pillsBibliaRapida = document.querySelectorAll(".pill-biblia-rapida");
+
+    let catalogoLivrosCatolicos = [];
+    let cacheLivrosBiblia = {};
+    let livroAtualBiblia = null;
+    let capituloAtualBiblia = 1;
+    let filtroTestamentoBiblia = "todos";
+    let vozCapituloTocando = false;
+    let tamanhoFonteBibliaPercent = parseInt(localStorage.getItem("bibliaTamanhoFonte") || "100", 10);
+
+    function aplicarTamanhoFonteBiblia(percent) {
+        tamanhoFonteBibliaPercent = Math.max(80, Math.min(145, percent));
+        try {
+            localStorage.setItem("bibliaTamanhoFonte", String(tamanhoFonteBibliaPercent));
+        } catch (e) {}
+
+        const escalaRem = (1.05 * (tamanhoFonteBibliaPercent / 100)).toFixed(2);
+        document.documentElement.style.setProperty("--tamanho-fonte-biblia", `${escalaRem}rem`);
+        if (indicadorTamanhoFonte) {
+            indicadorTamanhoFonte.textContent = `${tamanhoFonteBibliaPercent}%`;
+        }
+    }
+
+    aplicarTamanhoFonteBiblia(tamanhoFonteBibliaPercent);
+
+    if (btnAumentarFonte) {
+        btnAumentarFonte.addEventListener("click", () => aplicarTamanhoFonteBiblia(tamanhoFonteBibliaPercent + 10));
+    }
+    if (btnDiminuirFonte) {
+        btnDiminuirFonte.addEventListener("click", () => aplicarTamanhoFonteBiblia(tamanhoFonteBibliaPercent - 10));
+    }
+
+    async function inicializarLeitorBiblia() {
+        try {
+            const resp = await fetch("data/biblia/livros.json");
+            if (!resp.ok) throw new Error("Não foi possível carregar o índice de livros.");
+            catalogoLivrosCatolicos = await resp.json();
+            
+            povoarSelectLivros();
+            
+            // Seleciona Salmos 23 por padrão
+            const livroPadrao = catalogoLivrosCatolicos.find(l => l.id === "salmos") || catalogoLivrosCatolicos[0];
+            if (livroPadrao) {
+                selecionarLivroECapitulo(livroPadrao.id, 23);
+            }
+        } catch (e) {
+            console.error("Erro ao carregar Bíblia:", e);
+            if (leitorVersiculosLista) {
+                leitorVersiculosLista.innerHTML = `
+                    <div class="leitor-carregando" style="color: #fca5a5;">
+                        <span class="carregando-icone">⚠️</span>
+                        <p>Não foi possível carregar o leitor bíblico. Atualize a página.</p>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function povoarSelectLivros(termoBusca = "") {
+        if (!selectLivroBiblia) return;
+
+        const termo = termoBusca.toLowerCase().trim();
+        const livrosFiltrados = catalogoLivrosCatolicos.filter(l => {
+            const matchTestamento = filtroTestamentoBiblia === "todos" || l.testamento === filtroTestamentoBiblia;
+            const matchBusca = !termo || l.nome.toLowerCase().includes(termo);
+            return matchTestamento && matchBusca;
+        });
+
+        selectLivroBiblia.innerHTML = "";
+
+        if (livrosFiltrados.length === 0) {
+            const opt = document.createElement("option");
+            opt.textContent = "Nenhum livro encontrado";
+            opt.disabled = true;
+            selectLivroBiblia.appendChild(opt);
+            return;
+        }
+
+        // Agrupa por testamento se estiver em 'todos'
+        if (filtroTestamentoBiblia === "todos" && !termo) {
+            const grupoAT = document.createElement("optgroup");
+            grupoAT.label = "Antigo Testamento (46 livros)";
+            const grupoNT = document.createElement("optgroup");
+            grupoNT.label = "Novo Testamento (27 livros)";
+
+            livrosFiltrados.forEach(livro => {
+                const opt = document.createElement("option");
+                opt.value = livro.id;
+                opt.textContent = `${livro.nome} (${livro.totalCapitulos} caps)`;
+                if (livro.testamento === "Antigo Testamento") {
+                    grupoAT.appendChild(opt);
+                } else {
+                    grupoNT.appendChild(opt);
+                }
+            });
+
+            selectLivroBiblia.appendChild(grupoAT);
+            selectLivroBiblia.appendChild(grupoNT);
+        } else {
+            livrosFiltrados.forEach(livro => {
+                const opt = document.createElement("option");
+                opt.value = livro.id;
+                opt.textContent = `${livro.nome} (${livro.totalCapitulos} caps)`;
+                selectLivroBiblia.appendChild(opt);
+            });
+        }
+
+        if (livroAtualBiblia) {
+            selectLivroBiblia.value = livroAtualBiblia.id;
+        }
+    }
+
+    function povoarSelectCapitulos(totalCapitulos, capituloSelecionado = 1) {
+        if (!selectCapituloBiblia) return;
+        selectCapituloBiblia.innerHTML = "";
+
+        for (let i = 1; i <= totalCapitulos; i++) {
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.textContent = `${i}`;
+            if (i === capituloSelecionado) opt.selected = true;
+            selectCapituloBiblia.appendChild(opt);
+        }
+    }
+
+    async function carregarDadosLivro(slug) {
+        if (cacheLivrosBiblia[slug]) {
+            return cacheLivrosBiblia[slug];
+        }
+
+        const resp = await fetch(`data/biblia/${slug}.json`);
+        if (!resp.ok) throw new Error(`Erro ao baixar livro: ${slug}`);
+        const data = await resp.json();
+        cacheLivrosBiblia[slug] = data;
+        return data;
+    }
+
+    async function selecionarLivroECapitulo(slug, numCapitulo = 1, rolarAteTexto = false) {
+        const livroInfo = catalogoLivrosCatolicos.find(l => l.id === slug);
+        if (!livroInfo) return;
+
+        livroAtualBiblia = livroInfo;
+        capituloAtualBiblia = Math.max(1, Math.min(livroInfo.totalCapitulos, numCapitulo));
+
+        if (selectLivroBiblia && selectLivroBiblia.value !== slug) {
+            selectLivroBiblia.value = slug;
+        }
+
+        povoarSelectCapitulos(livroInfo.totalCapitulos, capituloAtualBiblia);
+
+        if (leitorTituloCapitulo) {
+            leitorTituloCapitulo.textContent = `${livroInfo.nome} — Capítulo ${capituloAtualBiblia}`;
+        }
+        if (leitorTestamentoInfo) {
+            leitorTestamentoInfo.textContent = `${livroInfo.testamento} • Tradução Católica Ave Maria`;
+        }
+        if (leitorIndicadorCentro) {
+            leitorIndicadorCentro.textContent = `Capítulo ${capituloAtualBiblia} de ${livroInfo.totalCapitulos}`;
+        }
+
+        // Atualizar estado dos botões anterior/próximo
+        const indiceLivro = catalogoLivrosCatolicos.indexOf(livroInfo);
+        const ehPrimeiro = indiceLivro === 0 && capituloAtualBiblia === 1;
+        const ehUltimo = indiceLivro === catalogoLivrosCatolicos.length - 1 && capituloAtualBiblia === livroInfo.totalCapitulos;
+
+        if (btnCapituloAnterior) btnCapituloAnterior.disabled = ehPrimeiro;
+        if (btnCapituloProximo) btnCapituloProximo.disabled = ehUltimo;
+
+        // Renderiza Versículos
+        if (leitorVersiculosLista) {
+            leitorVersiculosLista.innerHTML = `
+                <div class="leitor-carregando">
+                    <span class="carregando-icone">✝</span>
+                    <p>Carregando ${escaparHTML(livroInfo.nome)} ${capituloAtualBiblia}...</p>
+                </div>
+            `;
+        }
+
+        // Se a leitura de voz estava tocando, cancela
+        if (vozCapituloTocando && "speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            vozCapituloTocando = false;
+            if (btnOuvirCapitulo) btnOuvirCapitulo.querySelector(".btn-texto-curto").textContent = "Ouvir Capítulo";
+        }
+
+        try {
+            const dadosLivro = await carregarDadosLivro(slug);
+            const dadosCapitulo = dadosLivro.capitulos.find(c => c.capitulo === capituloAtualBiblia) || dadosLivro.capitulos[capituloAtualBiblia - 1];
+
+            if (!dadosCapitulo || !dadosCapitulo.versiculos || dadosCapitulo.versiculos.length === 0) {
+                leitorVersiculosLista.innerHTML = `<p class="estado-vazio">Nenhum versículo encontrado para este capítulo.</p>`;
+                return;
+            }
+
+            leitorVersiculosLista.innerHTML = "";
+
+            dadosCapitulo.versiculos.forEach(v => {
+                const item = document.createElement("div");
+                item.className = "versiculo-item";
+                item.setAttribute("data-versiculo", v.versiculo);
+
+                const textoFormatado = escaparHTML(v.texto);
+
+                item.innerHTML = `
+                    <span class="num-versiculo" aria-hidden="true">${v.versiculo}</span>
+                    <span class="versiculo-texto">${textoFormatado}</span>
+                    <div class="versiculo-acoes-hover">
+                        <button type="button" class="btn-versiculo-acao btn-copiar-versiculo-individual" title="Copiar este versículo">
+                            📋 Copiar
+                        </button>
+                        <button type="button" class="btn-versiculo-acao btn-anotar-diario" title="Anotar no Diário Bíblico">
+                            📝 Anotar
+                        </button>
+                    </div>
+                `;
+
+                // Botão Copiar Versículo Individual
+                const btnCopiar = item.querySelector(".btn-copiar-versiculo-individual");
+                btnCopiar.addEventListener("click", () => {
+                    const textoCopia = `“${v.texto}” — ${livroInfo.nome} ${capituloAtualBiblia}:${v.versiculo} (Bíblia Ave Maria)`;
+                    navigator.clipboard.writeText(textoCopia)
+                        .then(() => mostrarToast(`Versículo ${v.versiculo} copiado!`, "sucesso", "📋"))
+                        .catch(() => mostrarToast("Não foi possível copiar.", "erro"));
+                });
+
+                // Botão Anotar no Diário Bíblico
+                const btnAnotar = item.querySelector(".btn-anotar-diario");
+                btnAnotar.addEventListener("click", () => {
+                    if (campoLivro) campoLivro.value = livroInfo.nome;
+                    if (campoCapitulo) campoCapitulo.value = capituloAtualBiblia;
+                    if (campoAprendizado) {
+                        campoAprendizado.value = `“${v.texto}” (${livroInfo.nome} ${capituloAtualBiblia}:${v.versiculo})\n\nReflexão: `;
+                        campoAprendizado.focus();
+                    }
+
+                    const secaoDiario = document.getElementById("biblia");
+                    if (secaoDiario) {
+                        secaoDiario.scrollIntoView({ behavior: "smooth" });
+                    }
+                    mostrarToast(`Passagem enviada para o Diário Bíblico!`, "sucesso", "📝");
+                });
+
+                leitorVersiculosLista.appendChild(item);
+            });
+
+            if (rolarAteTexto) {
+                const secaoLeitor = document.getElementById("leitorTextoContainer");
+                if (secaoLeitor) secaoLeitor.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+
+        } catch (erro) {
+            console.error("Erro ao carregar versículos:", erro);
+            leitorVersiculosLista.innerHTML = `<p class="estado-vazio" style="color: #fca5a5;">Erro ao carregar o texto. Tente novamente.</p>`;
+        }
+    }
+
+    // Eventos de Seleção
+    if (selectLivroBiblia) {
+        selectLivroBiblia.addEventListener("change", (e) => {
+            selecionarLivroECapitulo(e.target.value, 1);
+        });
+    }
+
+    if (selectCapituloBiblia) {
+        selectCapituloBiblia.addEventListener("change", (e) => {
+            if (livroAtualBiblia) {
+                selecionarLivroECapitulo(livroAtualBiblia.id, parseInt(e.target.value, 10));
+            }
+        });
+    }
+
+    if (inputBuscaLivro) {
+        inputBuscaLivro.addEventListener("input", (e) => {
+            povoarSelectLivros(e.target.value);
+        });
+    }
+
+    // Abas de Testamento
+    botoesTabTestamento.forEach(btn => {
+        btn.addEventListener("click", () => {
+            botoesTabTestamento.forEach(b => {
+                b.classList.remove("ativo");
+                b.setAttribute("aria-selected", "false");
+            });
+            btn.classList.add("ativo");
+            btn.setAttribute("aria-selected", "true");
+            filtroTestamentoBiblia = btn.getAttribute("data-testamento");
+            povoarSelectLivros(inputBuscaLivro ? inputBuscaLivro.value : "");
+        });
+    });
+
+    // Pílulas de Passagens Frequentes
+    pillsBibliaRapida.forEach(pill => {
+        pill.addEventListener("click", () => {
+            const slug = pill.getAttribute("data-slug");
+            const cap = parseInt(pill.getAttribute("data-cap"), 10) || 1;
+            selecionarLivroECapitulo(slug, cap, true);
+            mostrarToast(`Abrindo ${pill.textContent}...`, "info", "📖");
+        });
+    });
+
+    // Navegação Anterior / Próximo
+    if (btnCapituloAnterior) {
+        btnCapituloAnterior.addEventListener("click", () => {
+            if (!livroAtualBiblia) return;
+            if (capituloAtualBiblia > 1) {
+                selecionarLivroECapitulo(livroAtualBiblia.id, capituloAtualBiblia - 1, true);
+            } else {
+                const idx = catalogoLivrosCatolicos.indexOf(livroAtualBiblia);
+                if (idx > 0) {
+                    const livroAnterior = catalogoLivrosCatolicos[idx - 1];
+                    selecionarLivroECapitulo(livroAnterior.id, livroAnterior.totalCapitulos, true);
+                }
+            }
+        });
+    }
+
+    if (btnCapituloProximo) {
+        btnCapituloProximo.addEventListener("click", () => {
+            if (!livroAtualBiblia) return;
+            if (capituloAtualBiblia < livroAtualBiblia.totalCapitulos) {
+                selecionarLivroECapitulo(livroAtualBiblia.id, capituloAtualBiblia + 1, true);
+            } else {
+                const idx = catalogoLivrosCatolicos.indexOf(livroAtualBiblia);
+                if (idx < catalogoLivrosCatolicos.length - 1) {
+                    const proximoLivro = catalogoLivrosCatolicos[idx + 1];
+                    selecionarLivroECapitulo(proximoLivro.id, 1, true);
+                }
+            }
+        });
+    }
+
+    // Ouvir Capítulo em Áudio
+    if (btnOuvirCapitulo && "speechSynthesis" in window) {
+        btnOuvirCapitulo.addEventListener("click", () => {
+            if (vozCapituloTocando) {
+                window.speechSynthesis.cancel();
+                vozCapituloTocando = false;
+                btnOuvirCapitulo.querySelector(".btn-texto-curto").textContent = "Ouvir Capítulo";
+                mostrarToast("Leitura em áudio pausada.", "info");
+                return;
+            }
+
+            const versiculosEls = leitorVersiculosLista.querySelectorAll(".versiculo-texto");
+            if (versiculosEls.length === 0) return;
+
+            const textoCompleto = `${livroAtualBiblia.nome}, capítulo ${capituloAtualBiblia}. ` + 
+                Array.from(versiculosEls).map(el => el.textContent).join(" ");
+
+            const utterance = new SpeechSynthesisUtterance(textoCompleto);
+            utterance.lang = "pt-BR";
+            utterance.rate = 0.95;
+
+            utterance.onstart = () => {
+                vozCapituloTocando = true;
+                btnOuvirCapitulo.querySelector(".btn-texto-curto").textContent = "Pausar Leitura";
+                mostrarToast(`Reproduzindo ${livroAtualBiblia.nome} ${capituloAtualBiblia}...`, "info", "🔊");
+            };
+
+            utterance.onend = () => {
+                vozCapituloTocando = false;
+                btnOuvirCapitulo.querySelector(".btn-texto-curto").textContent = "Ouvir Capítulo";
+            };
+
+            utterance.onerror = () => {
+                vozCapituloTocando = false;
+                btnOuvirCapitulo.querySelector(".btn-texto-curto").textContent = "Ouvir Capítulo";
+            };
+
+            window.speechSynthesis.speak(utterance);
+        });
+    }
+
+    // Copiar Capítulo Inteiro
+    if (btnCopiarCapitulo) {
+        btnCopiarCapitulo.addEventListener("click", () => {
+            if (!livroAtualBiblia) return;
+            const versiculosEls = leitorVersiculosLista.querySelectorAll(".versiculo-item");
+            if (versiculosEls.length === 0) return;
+
+            let textoCopia = `📖 ${livroAtualBiblia.nome} — Capítulo ${capituloAtualBiblia} (Bíblia Católica Ave Maria)\n\n`;
+            versiculosEls.forEach(item => {
+                const num = item.querySelector(".num-versiculo").textContent;
+                const txt = item.querySelector(".versiculo-texto").textContent;
+                textoCopia += `${num}. ${txt}\n`;
+            });
+            textoCopia += `\nCaminho com Cristo: Fé, Oração e Sagrada Escritura.`;
+
+            navigator.clipboard.writeText(textoCopia)
+                .then(() => mostrarToast(`${livroAtualBiblia.nome} ${capituloAtualBiblia} copiado com sucesso!`, "sucesso", "📋"))
+                .catch(() => mostrarToast("Não foi possível copiar o capítulo.", "erro"));
+        });
+    }
+
+    // Inicia o carregamento da Bíblia
+    inicializarLeitorBiblia();
+
+
+    // =========================================================================
+    // 7. DIÁRIO DE LEITURA BÍBLICA (MINHA CAMINHADA)
     // =========================================================================
     const campoLivro = document.getElementById("livro");
     const campoCapitulo = document.getElementById("capitulo");
