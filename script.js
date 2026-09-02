@@ -693,9 +693,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function inicializarLeitorBiblia() {
         try {
-            const resp = await fetch("data/biblia/livros.json");
-            if (!resp.ok) throw new Error("Não foi possível carregar o índice de livros.");
-            catalogoLivrosCatolicos = await resp.json();
+            // Se já carregado via script tag (data/biblia-dados.js), usa diretamente sem bloqueio de CORS (funciona em file:/// e http://)
+            if (window.BIBLIA_CATOLICA && Array.isArray(window.BIBLIA_CATOLICA.livros)) {
+                catalogoLivrosCatolicos = window.BIBLIA_CATOLICA.livros;
+            } else {
+                const resp = await fetch("data/biblia/livros.json");
+                if (!resp.ok) throw new Error("Não foi possível carregar o índice de livros.");
+                catalogoLivrosCatolicos = await resp.json();
+            }
             
             povoarSelectLivros();
             
@@ -785,10 +790,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function carregarDadosLivro(slug) {
+        // 1. Memória global via script (file:/// e offline)
+        if (window.BIBLIA_CATOLICA && window.BIBLIA_CATOLICA.dados && window.BIBLIA_CATOLICA.dados[slug]) {
+            return window.BIBLIA_CATOLICA.dados[slug];
+        }
+
+        // 2. Cache interno
         if (cacheLivrosBiblia[slug]) {
             return cacheLivrosBiblia[slug];
         }
 
+        // 3. Fetch sob demanda (HTTP/HTTPS)
         const resp = await fetch(`data/biblia/${slug}.json`);
         if (!resp.ok) throw new Error(`Erro ao baixar livro: ${slug}`);
         const data = await resp.json();
